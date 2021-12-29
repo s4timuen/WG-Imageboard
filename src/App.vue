@@ -1,9 +1,15 @@
 <template>
-  <div id="app">
-    <Header />
-    <Sidebar />
-    <Footer />
-    <router-view></router-view>
+  <div id="app" class="container-fluid">
+    <div class="row border">
+      <Header class="col-12" />
+    </div>
+    <div class="row border">
+      <Sidebar class="col-2" />
+      <router-view class="col-10"></router-view>
+    </div>
+    <div class="row border">
+      <Footer class="col-12" />
+    </div>
   </div>
 </template>
 
@@ -29,6 +35,6 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  background-color: #ced4da;
 }
 </style>

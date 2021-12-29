@@ -1,5 +1,10 @@
 # WG-Imageboard
 
+## Backend Setup
+```
+See [Installing Synapse](https://matrix.org/docs/guides/installing-synapse).
+```
+
 ## Project setup
 ```
 npm install

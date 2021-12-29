@@ -1,5 +1,9 @@
 <template>
-  <div id="header"></div>
+  <div id="header" class="container-fluid">
+    <div class="row">
+      <div class="col-11"><h1>header</h1></div>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -10,4 +14,7 @@ export default {
 </script>
 
 <style scoped lang="css">
+#header {
+  background-color: #adb5bd;
+}
 </style>
