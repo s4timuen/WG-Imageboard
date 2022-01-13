@@ -1,11 +1,21 @@
 <template>
-  <div id="sidebar" class="container-fluid">
+  <div id="sidebar" class="container-fluid rounded">
     <ul id="sidebar-nav">
       <li>
         <router-link to="/">
-          <span>
-            {{ $t("link-home") }}
-          </span>
+          {{ $t("link-home") }}
+        </router-link>
+      </li>
+
+      <li>
+        <router-link to="/profile">
+          {{ $t("link-profile") }}
+        </router-link>
+      </li>
+
+      <li id="li-logout" @click="logoutUser()">
+        <router-link to="/">
+          {{ $t("logout") }}
         </router-link>
       </li>
     </ul>
@@ -15,9 +25,16 @@
 <script>
 export default {
   name: "Sidebar",
-  components: {},
-  date: function () {
-    return {};
+  methods: {
+    logoutUser() {
+      let matrixClient = this.$store.getters.matrixClient;
+      if (matrixClient.isLoggedIn()) {
+        matrixClient.logout(this.$cookie.get("matrix-user-token"));
+        matrixClient.stopClient();
+        this.$cookie.delete("matrix-user-token");
+        this.$router.push({ name: "Login" });
+      }
+    },
   },
 };
 </script>
@@ -34,6 +51,7 @@ export default {
 
 li {
   font-size: 1.5em;
-  padding-bottom: 0.5em;
+  padding-bottom: 0.25em;
+  text-align: start;
 }
 </style>

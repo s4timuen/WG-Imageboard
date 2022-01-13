@@ -1,8 +1,20 @@
 {
+    "wg-imageboard-title": "WG-Imageboard",
     "link-home": "Home",
+    "link-profile": "Profile",
     "username": "Username : ",
     "password": "Password : ",
+    "confirm-password": "Confirm Password: ",
     "remember-me": "Remember me",
+    "email": "Email: ",
+    "save": "Save",
     "login": "Login",
-    "registration": "Registration"
+    "logout": "Logout",
+    "registration": "Registration",
+    "rooms": "Rooms: ",
+    "wellcome": "Wellcome to WG-Imageboard!",
+    "footer-fuhagen": "FernUniversität in Hagen",
+    "footer-author": "Tim Münzinger",
+    "footer-year": "2022",
+    "lorem-ipsum": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet."
 }

@@ -1,7 +1,23 @@
 <template>
-  <div id="registration-form" class="container-fluid border border-dark">
+  <div
+    id="registration-form"
+    class="container-fluid border border-dark rounded"
+  >
     <div class="row">
       <h1 class="col-12 align-content-center">{{ $t("registration") }}</h1>
+    </div>
+
+    <div class="row">
+      <label class="col-8 offset-2 d-flex justify-content-start">{{
+        $t("email")
+      }}</label>
+      <input
+        id="user-registration-email-input"
+        type="text"
+        class="col-8 offset-2 d-flex justify-content-start"
+        placeholder="Enter email"
+        required="true"
+      />
     </div>
 
     <div class="row">
@@ -31,6 +47,19 @@
     </div>
 
     <div class="row">
+      <label class="col-8 offset-2 d-flex justify-content-start">{{
+        $t("confirm-password")
+      }}</label>
+      <input
+        id="user-registration-password-confirm-input"
+        type="password"
+        class="col-8 offset-2 d-flex justify-content-start"
+        placeholder="Confirm Password"
+        required="true"
+      />
+    </div>
+
+    <div class="row">
       <button
         id="registration-button"
         class="col-4 offset-2 d-flex justify-content-center"
@@ -45,10 +74,6 @@
 <script>
 export default {
   name: "RegistrationForm",
-  components: {},
-  data: function () {
-    return {};
-  },
   computed: {
     userNameRegistration: function () {
       return document.getElementById("user-registration-name-input").value;
@@ -56,16 +81,25 @@ export default {
     userPasswordRegistration: function () {
       return document.getElementById("user-registration-password-input").value;
     },
+    userPasswordConfirmRegistration: function () {
+      return document.getElementById("user-registration-password-confirm-input")
+        .value;
+    },
   },
   methods: {
     userRegistration() {
       let matrixClient = this.$store.getters.matrixClient;
-      // start matrix client & register user
-      matrixClient
-        .register(this.userNameRegistration, this.userPasswordRegistration)
-        .catch((error) => {
-          throw error;
-        });
+      // register user
+      if (
+        this.userNameRegistration !== "" &&
+        this.userPasswordRegistration == this.userPasswordConfirmRegistration
+      ) {
+        matrixClient
+          .register(this.userNameRegistration, this.userPasswordRegistration)
+          .catch((error) => {
+            throw error;
+          });
+      }
     },
   },
 };

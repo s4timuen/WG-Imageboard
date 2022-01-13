@@ -19,10 +19,31 @@ export default {
     LoginForm,
     RegistrationForm,
   },
-  mounted: function () {
-    // if already logged in redirect to home page
-    if (this.$store.getters.isLoggedIn) {
-      this.$router.push("Home");
+  mounted: async function () {
+    let matrixClient = this.$store.getters.matrixClient;
+    let accessToken = this.$cookie.get("matrix-user-token");
+
+    // valid session token after reload
+    if (!matrixClient.isLoggedIn() && accessToken !== null) {
+      await matrixClient
+        .login("m.login.token", {
+          token: accessToken,
+        })
+        .catch((error) => {
+          throw error;
+        });
+
+      // start matrix client
+      await matrixClient.startClient({ initialSyncLimit: 10 });
+      matrixClient.once("sync", function (state, prevState, res) {
+        if (state === "PREPARED") {
+          console.log("Matrix client prepared");
+        }
+        if (state !== "PREPARED") {
+          console.log(state, prevState, res);
+          process.exit(1);
+        }
+      });
     }
   },
 };

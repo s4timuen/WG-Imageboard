@@ -1,5 +1,11 @@
 <template>
-  <div id="footer" class="container-fluid"><h1>footer</h1></div>
+  <div id="footer" class="container-fluid rounded">
+    <div class="row">
+      <span class="col-12">{{ $t("footer-fuhagen") }}</span>
+      <span class="col-12">{{ $t("footer-author") }}</span>
+      <span class="col-12">{{ $t("footer-year") }}</span>
+    </div>
+  </div>
 </template>
 
 <script>

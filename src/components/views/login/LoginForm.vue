@@ -1,5 +1,5 @@
 <template>
-  <div id="login-form" class="container-fluid border border-dark">
+  <div id="login-form" class="container-fluid border border-dark rounded">
     <div class="row">
       <h1 class="col-12 align-content-center">{{ $t("login") }}</h1>
     </div>
@@ -35,7 +35,7 @@
         id="remember-me-checkbox"
         class="offset-2 d-flex justify-content-end"
         type="checkbox"
-        checked="checked"
+        unchecked
       />
       <p class="d-flex justify-content-start">{{ $t("remember-me") }}</p>
     </div>
@@ -55,10 +55,6 @@
 <script>
 export default {
   name: "LoginForm",
-  components: {},
-  data: function () {
-    return {};
-  },
   computed: {
     userNameLogin: function () {
       return document.getElementById("user-login-name-input").value;
@@ -70,20 +66,35 @@ export default {
   methods: {
     async userLogin() {
       let matrixClient = this.$store.getters.matrixClient;
-      // start matrix client & login user
-      matrixClient
+      const THIS = this;
+      // user and password login
+      await matrixClient
         .login("m.login.password", {
           user: this.userNameLogin,
           password: this.userPasswordLogin,
         })
+        .then((response) => {
+          // cookie session duration & remember me 
+          let durability = "15m";
+          if (document.getElementById("remember-me-checkbox").checked) {
+            durability = "1M";
+          }
+          this.$cookie.set("matrix-user-token", response.access_token, {
+            expires: durability,
+          });
+        })
         .catch((error) => {
           throw error;
         });
-      await matrixClient.startClient();
+      // start matrix client
+      await matrixClient.startClient({ initialSyncLimit: 10 });
       matrixClient.once("sync", function (state, prevState, res) {
         if (state === "PREPARED") {
-          console.log("prepared");
-        } else {
+          console.log("Matrix client prepared");
+          // redirect homepage 
+          THIS.$router.push({ name: "Home" });
+        }
+        if (state !== "PREPARED") {
           console.log(state, prevState, res);
           process.exit(1);
         }
