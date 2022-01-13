@@ -87,7 +87,7 @@ export default {
           throw error;
         });
       // start matrix client
-      await matrixClient.startClient({ initialSyncLimit: 10 });
+      await matrixClient.startClient({ initialSyncLimit: 100 });
       matrixClient.once("sync", function (state, prevState, res) {
         if (state === "PREPARED") {
           console.log("Matrix client prepared");
