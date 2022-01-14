@@ -15,43 +15,19 @@ async function buildPosts(timeline) {
             // reply
             if (matrixEvent.getContent()["m.relates_to"] !== undefined) {
                 // reply to post
-                if (
-                    matrixEvent.getContent()["m.relates_to"]["m.in_reply_to"]
-                        .event_id !== undefined
-                ) {
-                    posts.forEach((post) => {
-                        // reply to initial message
-                        if (
-                            post["initial-message"].getId() ===
-                            matrixEvent.getContent()["m.relates_to"]["m.in_reply_to"]
-                                .event_id
-                        ) {
-                            post.replies.push({
-                                "reply-message": matrixEvent,
-                                replies: [],
-                            });
-                        }
-                        // reply to a reply
-                        if (
-                            post["initial-message"].getId() !==
-                            matrixEvent.getContent()["m.relates_to"]["m.in_reply_to"]
-                                .event_id
-                        ) {
-                            post.replies.forEach((reply) => {
-                                if (
-                                    reply["reply-message"].getId() ===
-                                    matrixEvent.getContent()["m.relates_to"]["m.in_reply_to"]
-                                        .event_id
-                                ) {
-                                    reply.replies.push({
-                                        "reply-message": matrixEvent,
-                                        replies: [],
-                                    });
-                                }
-                            });
-                        }
-                    });
-                }
+
+                posts.forEach((post) => {
+                    // reply to initial message
+                    if (
+                        post["initial-message"].getId() ===
+                        matrixEvent.getContent()["m.relates_to"]["m.in_reply_to"]
+                            .event_id
+                    ) {
+                        post.replies.push({
+                            "reply-message": matrixEvent,
+                        });
+                    }
+                });
             }
         }
     });
@@ -59,4 +35,8 @@ async function buildPosts(timeline) {
     return posts;
 }
 
-export { buildPosts }
+function changeVisibilityCreateReply(id) {
+    document.getElementById(id).hidden = !document.getElementById(id).hidden;
+}
+
+export { buildPosts, changeVisibilityCreateReply }

@@ -43,7 +43,7 @@
         type="button"
         @click="sendPost()"
       >
-        {{ $t("send-button") }}
+        {{ $t("send-post-button") }}
       </button>
     </div>
   </div>

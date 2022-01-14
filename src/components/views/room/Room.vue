@@ -4,7 +4,7 @@
       <CreatePost :roomId="roomId"/>
     </div>
     <div id="room-posts" class="row">
-      <Post v-for="(post, key) in posts" :key="key" :postData="post" />
+      <Post v-for="(post, key) in posts" :key="key" :postData="post" :roomId="roomId"/>
     </div>
   </div>
 </template>
