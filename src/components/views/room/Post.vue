@@ -1,6 +1,6 @@
 <template>
-  <div class="container-fluid">
-    <div :id="postData['initial-message'].getId()" class="ol-12 post-message">
+  <div class="container-fluid col-12 border rounded">
+    <div :id="postData['initial-message'].getId()" class="col-12 post-message">
       {{ postData["initial-message"].getContent().body }}
     </div>
 
