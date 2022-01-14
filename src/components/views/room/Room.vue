@@ -1,7 +1,7 @@
 <template>
   <div id="room-page" class="container-fluid">
     <div id="room-create-post" class="row">
-      <CreatePost />
+      <CreatePost :roomId="roomId"/>
     </div>
     <div id="room-posts" class="row">
       <Post v-for="(post, key) in posts" :key="key" :postData="post" />
@@ -35,7 +35,7 @@ export default {
     let accessToken = this.$cookie.get("matrix-user-token");
 
     // check valid login and session
-    checkSession(this, accessToken);
+    await checkSession(this, accessToken);
 
     // get room timeline events and create posts data structure
     let room = matrixClient.getRoom(this.roomId);

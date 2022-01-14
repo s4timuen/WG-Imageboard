@@ -38,7 +38,7 @@ export default {
     let accessToken = this.$cookie.get("matrix-user-token");
 
     // check valid login and session
-    checkSession(this, accessToken);
+    await checkSession(this, accessToken);
 
     // if logged and session valid
     this.rooms = matrixClient.getRooms();

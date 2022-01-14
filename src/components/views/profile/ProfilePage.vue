@@ -16,12 +16,12 @@ export default {
       user: {},
     };
   },
-  mounted: function () {
+  mounted: async function () {
     let matrixClient = this.$store.getters.matrixClient;
     let accessToken = this.$cookie.get("matrix-user-token");
 
     // check valid login and session
-    checkSession(this, accessToken);
+    await checkSession(this, accessToken);
 
     // if logged and session valid
     this.user = matrixClient.getUser(matrixClient.getUserId());

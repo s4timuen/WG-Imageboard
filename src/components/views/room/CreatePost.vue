@@ -10,7 +10,6 @@
         type="text"
         class="col-8 offset-2 d-flex justify-content-start"
         placeholder="Enter Title"
-        required="true"
       />
     </div>
 
@@ -23,7 +22,6 @@
         type="text"
         class="col-8 offset-2 d-flex justify-content-start"
         placeholder="Enter Messge"
-        required="true"
       />
     </div>
 
@@ -34,7 +32,7 @@
         type="button"
         @click="uploadImage()"
       >
-        {{ $t("upload-image-button") }} 
+        {{ $t("upload-image-button") }}
       </button>
     </div>
 
@@ -45,7 +43,7 @@
         type="button"
         @click="sendPost()"
       >
-        {{ $t("send-button") }} 
+        {{ $t("send-button") }}
       </button>
     </div>
   </div>
@@ -54,14 +52,35 @@
 <script>
 export default {
   name: "CreatePost",
+  props: { roomId: String },
   methods: {
     uploadImage() {
       // TODO: see (2.2)
       console.log("todo");
     },
     sendPost() {
-        // TODO: see (1.1)
-    }
+      let matrixClient = this.$store.getters.matrixClient;
+      let title = document.getElementById("create-post-title-input").value;
+      let message = document.getElementById("create-post-message-input").value;
+
+      let content = {
+        header: title,
+        body: message,
+        msgtype: "m.text",
+      };
+
+      if (Boolean(title) && Boolean(message)) {
+        matrixClient.sendEvent(
+          this.roomId,
+          "m.room.message",
+          content,
+          "",
+          (err) => {
+            console.log(err);
+          }
+        );
+      }
+    },
   },
 };
 </script>

@@ -1,7 +1,12 @@
 <template>
   <div class="container-fluid col-12 border rounded">
     <div :id="postData['initial-message'].getId()" class="col-12 post-message">
-      {{ postData["initial-message"].getContent().body }}
+      <h5 class="col-12">
+        {{ postData["initial-message"].getContent().header }}
+      </h5>
+      <div class="col-12">
+        {{ postData["initial-message"].getContent().body }}
+      </div>
     </div>
 
     <div v-if="postData.replies.length > 0" class="col-12 reply-message">
