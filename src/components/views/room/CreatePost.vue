@@ -26,14 +26,12 @@
     </div>
 
     <div class="row">
-      <button
-        id="create-post-image-button"
+      <input
+        id="create-post-image-input"
         class="offset-2 d-flex justify-content-center"
-        type="button"
-        @click="uploadImage()"
-      >
-        {{ $t("upload-image-button") }}
-      </button>
+        type="file"
+        @change="onFileSelected"
+      />
     </div>
 
     <div class="row">
@@ -53,32 +51,48 @@
 export default {
   name: "CreatePost",
   props: { roomId: String },
+  data: function () {
+    return { selectedImage: null };
+  },
   methods: {
-    uploadImage() {
-      // TODO: see (2.2)
-      console.log("todo");
+    onFileSelected(event) {
+      this.selectedImage = event.target.files[0];
+      // TODO: thubnail create post
     },
-    sendPost() {
+    async sendPost() {
       let matrixClient = this.$store.getters.matrixClient;
       let title = document.getElementById("create-post-title-input").value;
       let message = document.getElementById("create-post-message-input").value;
 
-      let content = {
-        header: title,
-        body: message,
-        msgtype: "m.text",
-      };
+      // upload image (to homeserver) and send message event (to room)
+      if (Boolean(title) && Boolean(message) && Boolean(this.selectedImage)) {
+        await matrixClient
+          .uploadContent(this.selectedImage, {
+            name: this.selectedImage.name,
+            type: this.selectedImage.type,
+            onlyContentUri: false,
+          })
+          .then((response) => {
+            let content = {
+              header: title,
+              body: message,
+              msgtype: "m.image",
+              url: response.content_uri,
+            };
 
-      if (Boolean(title) && Boolean(message)) {
-        matrixClient.sendEvent(
-          this.roomId,
-          "m.room.message",
-          content,
-          "",
-          (err) => {
-            console.log(err);
-          }
-        );
+            matrixClient.sendEvent(
+              this.roomId,
+              "m.room.message",
+              content,
+              "",
+              (err) => {
+                console.log(err);
+              }
+            );
+          })
+          .catch((error) => {
+            throw error;
+          });
       }
     },
   },
@@ -95,7 +109,7 @@ label {
   margin-top: 2.5%;
 }
 #create-post-send-button,
-#create-post-image-button {
+#create-post-image-input {
   margin-top: 2.5%;
   margin-bottom: 2.5%;
 }

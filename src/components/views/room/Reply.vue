@@ -1,7 +1,11 @@
 <template>
-  <div class="container-fluid">
+  <div class="container-fluid border rounded">
     <div class="row">
-      <div :id="reply['reply-message'].getId()" class="col-12 reply-message">
+      <div class="reply-meta-info col-12">
+        <span>{{ reply["reply-message"].getSender() }}</span>
+        <span>{{ reply["reply-message"].getDate() }}</span>
+      </div>
+      <div :id="reply['reply-message'].getId()" class="col-12">
         {{ reply["reply-message"].getContent().body }}
       </div>
     </div>
@@ -19,8 +23,7 @@ export default {
 </script>
 
 <style scoped lang="css">
-.reply-message {
-  text-align: start;
-  padding: 0%;
+.reply-meta-info {
+  font-size: 0.7em;
 }
 </style>
