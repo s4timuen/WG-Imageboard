@@ -15,6 +15,7 @@
     "send-post-button": "Send Post",
     "send-reply-button": "Send Reply",
     "show-reply-input": "Reply", 
+    "show-delete-post": "Delete",
     "save": "Save",
     "login": "Login",
     "logout": "Logout",

@@ -31,12 +31,7 @@ async function buildPosts(timeline) {
             }
         }
     });
-    posts.reverse();
-    return posts;
+    return posts.reverse();
 }
 
-function changeVisibilityCreateReply(id) {
-    document.getElementById(id).hidden = !document.getElementById(id).hidden;
-}
-
-export { buildPosts, changeVisibilityCreateReply }
+export { buildPosts }

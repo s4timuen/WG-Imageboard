@@ -9,21 +9,56 @@
         {{ reply["reply-message"].getContent().body }}
       </div>
     </div>
+    <div class="row">
+      <span class="clickable" @click="deleteReply()"
+        >{{ $t("show-delete-post") }}
+      </span>
+    </div>
   </div>
 </template>
 
 <script>
-import { changeVisibilityCreateReply } from "@/utils/posts.js";
-
 export default {
   name: "Reply",
   props: { reply: Object },
-  methods: { changeVisibilityCreateReply },
+  methods: {
+    async deleteReply() {
+      let matrixClient = this.$store.getters.matrixClient;
+      let userId = matrixClient.getUserId();
+      let replySenderId = this.reply["reply-message"].getSender();
+      let roomId = this.reply["reply-message"].getRoomId();
+      let room = matrixClient.getRoom(roomId);
+      let eventId = this.reply["reply-message"].getId();
+      let timeline = room.getTimelineForEvent(eventId);
+
+      // remove event from timeline and redact on homeserver
+      if (userId == replySenderId) {
+        if (window.confirm("Sure to delete this reply?")) {
+          timeline.removeEvent(eventId);
+          matrixClient.redactEvent(roomId, eventId, undefined, {
+            reason: "Deleted by user.",
+          });
+          // TODO: rebuild posts @Room ?
+        }
+      }
+    },
+  },
+  mounted: function () {
+    console.log(this.reply);
+  },
 };
 </script>
 
 <style scoped lang="css">
 .reply-meta-info {
+  margin-bottom: 2%;
   font-size: 0.7em;
+}
+
+.clickable {
+  margin-right: 5%;
+  color: blue;
+  text-decoration: underline;
+  cursor: pointer;
 }
 </style>
