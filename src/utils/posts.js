@@ -1,7 +1,7 @@
 async function buildPosts(timeline) {
     let posts = [];
     await timeline.forEach((matrixEvent) => {
-        if (matrixEvent.getType() === "m.room.message") {
+        if (matrixEvent.getType() === "m.room.message" && !matrixEvent.isRedacted()) {
             // new post
             // "matrixEvent.getContent()["m.relates_to"]["m.in_reply_to"].event_id"
             // should be "matrixClient.getRelation()"

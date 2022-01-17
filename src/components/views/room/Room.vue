@@ -1,10 +1,15 @@
 <template>
   <div id="room-page" class="container-fluid">
     <div id="room-create-post" class="row">
-      <CreatePost :roomId="roomId"/>
+      <CreatePost :roomId="roomId" />
     </div>
     <div id="room-posts" class="row">
-      <Post v-for="(post, key) in posts" :key="key" :postData="post" :roomId="roomId"/>
+      <Post
+        v-for="(post, key) in posts"
+        :key="key"
+        :postData="post"
+        :roomId="roomId"
+      />
     </div>
   </div>
 </template>
@@ -43,7 +48,10 @@ export default {
 
     // listen to timeline events (new posts and replies)
     matrixClient.on("Room.timeline", async function (event) {
-      if (event.getType() === "m.room.message") {
+      if (
+        event.getType() === "m.room.message" ||
+        event.getType() === "m.room.redaction"
+      ) {
         if (event.getRoomId() === THIS.roomId) {
           THIS.posts = await buildPosts(room.timeline);
         }

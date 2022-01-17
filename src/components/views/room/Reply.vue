@@ -22,7 +22,7 @@ export default {
   name: "Reply",
   props: { reply: Object },
   methods: {
-    async deleteReply() {
+    deleteReply() {
       let matrixClient = this.$store.getters.matrixClient;
       let userId = matrixClient.getUserId();
       let replySenderId = this.reply["reply-message"].getSender();
@@ -35,17 +35,13 @@ export default {
       if (userId == replySenderId) {
         if (window.confirm("Sure to delete this reply?")) {
           timeline.removeEvent(eventId);
-          matrixClient.redactEvent(roomId, eventId, undefined, {
-            reason: "Deleted by user.",
+          matrixClient.redactEvent(roomId, eventId, "", {
+            reason: "Reply deleted by user.",
           });
-          // TODO: rebuild posts @Room ?
         }
       }
     },
-  },
-  mounted: function () {
-    console.log(this.reply);
-  },
+  }
 };
 </script>
 

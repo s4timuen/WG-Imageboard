@@ -24,8 +24,9 @@
         />
       </div>
     </div>
-    <div v-if="postData.replies.length > 0" class="row reply-message">
+    <div v-if="postData.replies.length > 0" class="row reply-messages">
       <Reply
+        class="reply"
         v-for="(subReply, key) in postData.replies"
         :key="key"
         :reply="subReply"
@@ -35,12 +36,13 @@
       <span
         class="clickable"
         @click="
-          changeVisibilityCreateReply(
-            'CR<' + postData['initial-message'].getId()
-          )
+          changeElementVisibility('CR<' + postData['initial-message'].getId())
         "
-        >{{ $t("show-reply-input") }}</span
-      >
+        >{{ $t("show-reply-input") }}
+      </span>
+      <span class="clickable" @click="deletePost()"
+        >{{ $t("show-delete-post") }}
+      </span>
       <CreateReply
         :createReplyId="'CR<' + postData['initial-message'].getId()"
         :roomId="roomId"
@@ -53,35 +55,72 @@
 <script>
 import Reply from "@/components/views/room/Reply.vue";
 import CreateReply from "@/components/views/room/CreateReply.vue";
-import { changeVisibilityCreateReply } from "@/utils/posts.js";
+import { changeElementVisibility } from "@/utils/utils.js";
 
 export default {
   name: "Post",
   components: { Reply, CreateReply },
   props: { postData: Object, roomId: String },
   methods: {
-    changeVisibilityCreateReply,
+    changeElementVisibility,
     getHttpUrl(mxcUrl) {
       let matrixClient = this.$store.getters.matrixClient;
       return matrixClient.mxcUrlToHttp(mxcUrl, 50, 50, "scale", false);
     },
-  },
-  mounted: function () {
-    console.log(this.postData);
+    deletePost() {
+      let matrixClient = this.$store.getters.matrixClient;
+      let userId = matrixClient.getUserId();
+      let postSenderId = this.postData["initial-message"].getSender();
+      let room = matrixClient.getRoom(this.roomId);
+
+      // get IDs of the post and all related replies
+      let eventIds = getEventIds(this.postData);
+
+      // remove all related events from timeline and redact all on homeserver
+      if (userId == postSenderId) {
+        if (window.confirm("Sure to delete this post?")) {
+          for (let eventId of eventIds) {
+            let timeline = room.getTimelineForEvent(eventId);
+            timeline.removeEvent(eventId);
+            matrixClient.redactEvent(this.roomId, eventId, "", {
+              reason: "Post and replies deleted by original user.",
+            });
+          }
+        }
+      }
+    },
   },
 };
+
+function getEventIds(postData) {
+  let ids = [];
+  // id of initial post
+  ids.push(postData["initial-message"].getId());
+  // ids of replies
+  postData.replies.forEach((reply) => {
+    ids.push(reply["reply-message"].getId());
+  });
+  return ids;
+}
 </script>
 
 <style scoped lang="css">
 .clickable {
+  margin-right: 5%;
   color: blue;
   text-decoration: underline;
   cursor: pointer;
 }
 .post-meta-info {
+  margin-top: 2%;
   font-size: 0.7em;
+  margin-bottom: 2%;
 }
 h5 {
+  margin-top: 2.5%;
   text-decoration: underline;
+}
+.reply {
+  margin-top: 5%;
 }
 </style>
