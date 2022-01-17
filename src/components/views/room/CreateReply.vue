@@ -1,5 +1,5 @@
 <template>
-  <div :id="createReplyId" class="container-fluid border rounded">
+  <div :id="createReplyId" class="container-fluid">
     <div class="row">
       <label class="col-8 offset-2 d-flex justify-content-start">{{
         $t("reply")
@@ -58,6 +58,7 @@ export default {
           }
         );
       }
+      document.getElementById(textAreaId).value = "";
     },
   },
 };

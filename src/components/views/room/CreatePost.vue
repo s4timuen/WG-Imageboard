@@ -57,7 +57,6 @@ export default {
   methods: {
     onFileSelected(event) {
       this.selectedImage = event.target.files[0];
-      // TODO: thubnail create post
     },
     async sendPost() {
       let matrixClient = this.$store.getters.matrixClient;
@@ -89,6 +88,10 @@ export default {
                 console.log(err);
               }
             );
+            document.getElementById("create-post-title-input").value = "";
+            document.getElementById("create-post-message-input").value = "";
+            document.getElementById("create-post-image-input").value = "";
+            this.selectedImage = null;
           })
           .catch((error) => {
             throw error;

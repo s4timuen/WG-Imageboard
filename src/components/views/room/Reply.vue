@@ -1,5 +1,5 @@
 <template>
-  <div class="container-fluid border rounded">
+  <div class="container-fluid">
     <div class="row">
       <div class="reply-meta-info col-12">
         <span>{{ reply["reply-message"].getSender() }}</span>
