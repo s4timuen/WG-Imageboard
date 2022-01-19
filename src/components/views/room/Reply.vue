@@ -21,7 +21,7 @@
       <UpdateMessage
         :updateMessageId="'UM<' + reply['reply-message'].getId()"
         :roomId="roomId"
-        :postMessage="reply['reply-message'].getContent().body"
+        :messageContent="reply['reply-message'].getContent()"
         hidden
       />
     </div>
@@ -55,6 +55,10 @@ export default {
             reason: "Reply deleted by user.",
           });
         }
+      }
+         if (userId !== replySenderId)
+      {
+        alert("You are not authorized to delete this reply!");
       }
     },
   },

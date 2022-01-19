@@ -52,7 +52,7 @@
       <UpdateMessage
         :updateMessageId="'UM<' + postData['initial-message'].getId()"
         :roomId="roomId"
-        :postMessage="postData['initial-message'].getContent().body"
+        :messageContent="postData['initial-message'].getContent()"
         hidden
       />
     </div>
@@ -92,7 +92,7 @@ export default {
       let eventIds = this.getEventIds(this.postData);
 
       // remove all related events from timeline and redact all on homeserver
-      if (userId == postSenderId) {
+      if (userId === postSenderId) {
         if (window.confirm("Sure to delete this post?")) {
           for (let eventId of eventIds) {
             let timeline = room.getTimelineForEvent(eventId);
@@ -102,6 +102,10 @@ export default {
             });
           }
         }
+      }
+      if (userId !== postSenderId)
+      {
+        alert("You are not authorized to delete this post!");
       }
     },
     getEventIds(postData) {

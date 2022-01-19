@@ -8,7 +8,7 @@
         :id="'TA<' + updateMessageId"
         type="text"
         class="col-8 offset-2 d-flex justify-content-start"
-        :value="postMessage"
+        :value="messageContent.body"
       />
     </div>
     <div class="row">
@@ -35,36 +35,42 @@ export default {
   props: {
     updateMessageId: String,
     roomId: String,
-    postMessage: String,
+    messageContent: Object,
   },
   methods: {
     updateMessage(textAreaId) {
       let matrixClient = this.$store.getters.matrixClient;
       let message = document.getElementById(textAreaId).value;
       let eventId = this.updateMessageId.substring(3);
+      let userId = matrixClient.getUserId();
+      console.log(this.messageContent)
+      let senderId = this.messageContent.getSender();
 
-console.log(this.roomId)
-
-      let content = {
-        body: message,
-        "m.relates_to": {
-          replace: {
-            event_id: eventId,
+      if (userId === senderId) {
+        let content = {
+          body: message,
+          "m.relates_to": {
+            replace: {
+              event_id: eventId,
+            },
           },
-        },
-        msgtype: "m.text",
-      };
+          msgtype: "m.text",
+        };
 
-      if (message) {
-        matrixClient.sendEvent(
-          this.roomId,
-          "m.room.message",
-          content,
-          "",
-          (err) => {
-            console.log(err);
-          }
-        );
+        if (message) {
+          matrixClient.sendEvent(
+            this.roomId,
+            "m.room.message",
+            content,
+            "",
+            (err) => {
+              console.log(err);
+            }
+          );
+        }
+      }
+      if (userId !== senderId) {
+        alert("You are not authorized to edit this post or reply!");
       }
     },
   },
