@@ -43,7 +43,6 @@ export default {
       let message = document.getElementById(textAreaId).value;
       let eventId = this.updateMessageId.substring(3);
       let userId = matrixClient.getUserId();
-      console.log(this.messageContent)
       let senderId = this.messageContent.getSender();
 
       if (userId === senderId) {
@@ -70,7 +69,7 @@ export default {
         }
       }
       if (userId !== senderId) {
-        alert("You are not authorized to edit this post or reply!");
+        alert(this.$t("alert-unauthorized-post-or-reply-edit"));
       }
     },
   },

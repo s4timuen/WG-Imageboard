@@ -23,10 +23,15 @@
     "login": "Login",
     "logout": "Logout",
     "registration": "Registration",
-    "rooms": "Rooms: ",
+    "list-public-rooms": "Join public rooms: ",
+    "user-rooms": "Your rooms: ",
     "wellcome": "Wellcome to WG-Imageboard!",
     "footer-fuhagen": "FernUniversität in Hagen",
     "footer-author": "Tim Münzinger",
     "footer-year": "2022",
-    "lorem-ipsum": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet."
+    "lorem-ipsum": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
+    "alert-room-already-joined": "You habe alredy joined this room!",
+    "alert-unauthorized-post-or-reply-edit": "You are not authorized to edit this post or reply!",
+    "alert-unauthorized-deletion-reply": "You are not authorized to delete this reply!",
+    "alert-unauthorized-deletion-post":"You are not authorized to delete this post!"
 }

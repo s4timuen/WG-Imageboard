@@ -56,9 +56,8 @@ export default {
           });
         }
       }
-         if (userId !== replySenderId)
-      {
-        alert("You are not authorized to delete this reply!");
+      if (userId !== replySenderId) {
+        alert(this.$t("alert-unauthorized-deletion-reply"));
       }
     },
   },

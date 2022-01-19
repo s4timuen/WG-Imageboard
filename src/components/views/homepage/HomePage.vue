@@ -5,15 +5,30 @@
       <span class="col-12">{{ $t("lorem-ipsum") }}</span>
     </div>
     <div id="rooms-section" class="row">
-      <input
-        :id="key"
-        class="col-4"
-        type="button"
-        v-for="(room, key) in rooms"
-        :key="key"
-        :value="room.name"
-        @click="openRoom(room.roomId)"
-      />
+      <div class="col-12 col-md-4 offset-md-1">
+        <span class="col-12">{{ $t("user-rooms") }}</span>
+        <input
+          :id="key"
+          class="col-12"
+          type="button"
+          v-for="(room, key) in joinedRooms"
+          :key="key"
+          :value="room.name"
+          @click="openRoom(room.roomId)"
+        />
+      </div>
+      <div class="col-12 col-md-4 offset-md-1">
+        <span class="col-12">{{ $t("list-public-rooms") }}</span>
+        <input
+          :id="key"
+          class="col-12"
+          type="button"
+          v-for="(room, key) in publicRooms"
+          :key="key"
+          :value="room.name"
+          @click="joinRoom(room.room_id)"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -25,12 +40,28 @@ export default {
   name: "HomePage",
   data: function () {
     return {
-      rooms: [],
+      joinedRooms: [],
+      publicRooms: [],
     };
   },
   methods: {
     openRoom(id) {
       this.$router.push({ name: "Room", params: { roomId: id } });
+    },
+    async joinRoom(id) {
+      let alreadyJoined = false;
+      this.joinedRooms.forEach((room) => {
+        if (id === room.roomId) {
+          alreadyJoined = true;
+        }
+      });
+      if (!alreadyJoined) {
+        await this.$store.getters.matrixClient.joinRoom(id);
+        this.$router.push({ name: "Room", params: { roomId: id } });
+      }
+      if (alreadyJoined) {
+        alert(this.$t("alert-room-already-joined"));
+      }
     },
   },
   mounted: async function () {
@@ -40,8 +71,17 @@ export default {
     // check valid login and session
     await checkSession(this, accessToken);
 
-    // if logged and session valid
-    this.rooms = matrixClient.getRooms();
+    // get list of joined rooms
+    let listJoinedRoomsIds = await matrixClient.getJoinedRooms();
+    await listJoinedRoomsIds.joined_rooms.forEach((roomId) => {
+      this.joinedRooms.push(matrixClient.getRoom(roomId));
+    });
+
+    // get list of public rooms
+    let listPublicRooms = await matrixClient.publicRooms();
+    await listPublicRooms.chunk.forEach((room) => {
+      this.publicRooms.push(room);
+    });
   },
 };
 </script>

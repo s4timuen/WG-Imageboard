@@ -103,9 +103,8 @@ export default {
           }
         }
       }
-      if (userId !== postSenderId)
-      {
-        alert("You are not authorized to delete this post!");
+      if (userId !== postSenderId) {
+        alert(this.$t("alert-unauthorized-deletion-post"));
       }
     },
     getEventIds(postData) {
