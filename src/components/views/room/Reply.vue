@@ -1,5 +1,5 @@
 <template>
-  <div class="container-fluid">
+  <div class="container-fluid reply">
     <div class="row">
       <div class="reply-meta-info col-12">
         <span>{{ reply["reply-message"].getSender() }}</span>
@@ -10,18 +10,34 @@
       </div>
     </div>
     <div class="row">
+      <span
+        class="clickable"
+        @click="changeElementVisibility('UM<' + reply['reply-message'].getId())"
+        >{{ $t("show-update-input") }}
+      </span>
       <span class="clickable" @click="deleteReply()"
         >{{ $t("show-delete-post") }}
       </span>
+      <UpdateMessage
+        :updateMessageId="'UM<' + reply['reply-message'].getId()"
+        :roomId="roomId"
+        :postMessage="reply['reply-message'].getContent().body"
+        hidden
+      />
     </div>
   </div>
 </template>
 
 <script>
+import UpdateMessage from "@/components/views/room/UpdateMessage.vue";
+import { changeElementVisibility } from "@/utils/utils.js";
+
 export default {
   name: "Reply",
-  props: { reply: Object },
+  components: { UpdateMessage },
+  props: { reply: Object, roomId: String },
   methods: {
+    changeElementVisibility,
     deleteReply() {
       let matrixClient = this.$store.getters.matrixClient;
       let userId = matrixClient.getUserId();
@@ -41,7 +57,7 @@ export default {
         }
       }
     },
-  }
+  },
 };
 </script>
 
@@ -50,11 +66,14 @@ export default {
   margin-bottom: 2%;
   font-size: 0.7em;
 }
-
 .clickable {
   margin-right: 5%;
   color: blue;
   text-decoration: underline;
   cursor: pointer;
+}
+.reply {
+  background-color: #c1c7cc;
+  padding-top: 5%;
 }
 </style>

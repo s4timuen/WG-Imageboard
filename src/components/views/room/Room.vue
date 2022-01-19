@@ -18,7 +18,7 @@
 import Post from "@/components/views/room/Post.vue";
 import CreatePost from "@/components/views/room/CreatePost.vue";
 import { checkSession } from "@/utils/session.js";
-import { buildPosts } from "@/utils/posts.js";
+import { buildPosts, applyEdits } from "@/utils/posts.js";
 
 export default {
   name: "ProfilePage",
@@ -34,6 +34,14 @@ export default {
       posts: {},
     };
   },
+  methods: {
+    async getPosts(timeline) {
+      let postsHelper = {};
+      postsHelper = await buildPosts(timeline);
+      postsHelper = await applyEdits(postsHelper);
+      return postsHelper;
+    },
+  },
   mounted: async function () {
     const THIS = this;
     let matrixClient = this.$store.getters.matrixClient;
@@ -44,7 +52,7 @@ export default {
 
     // get room timeline events and create posts data structure
     let room = matrixClient.getRoom(this.roomId);
-    this.posts = await buildPosts(room.timeline);
+    this.posts = await this.getPosts(room.timeline);
 
     // listen to timeline events (new posts and replies)
     matrixClient.on("Room.timeline", async function (event) {
@@ -53,7 +61,7 @@ export default {
         event.getType() === "m.room.redaction"
       ) {
         if (event.getRoomId() === THIS.roomId) {
-          THIS.posts = await buildPosts(room.timeline);
+          THIS.posts = await THIS.getPosts(room.timeline);
         }
       }
     });

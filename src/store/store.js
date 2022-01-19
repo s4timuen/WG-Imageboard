@@ -4,7 +4,10 @@ import * as matrix from "matrix-js-sdk";
 
 Vue.use(Vuex);
 
-let options = { baseUrl: "http://192.168.0.233:8008", timelineSupport: true };
+let options = {
+    baseUrl: "http://192.168.0.233:8008",
+    timelineSupport: true
+};
 
 const client = matrix.createClient(options);
 

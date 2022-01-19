@@ -8,27 +8,21 @@
         <span>{{ postData["initial-message"].getSender() }}</span>
         <span>{{ postData["initial-message"].getDate() }}</span>
       </div>
-      <div
-        class="col-12"
-        v-if="postData['initial-message'].getContent().msgtype == 'm.text'"
-      >
-        {{ postData["initial-message"].getContent().body }}
-      </div>
-      <div
-        class="col-12"
-        v-if="postData['initial-message'].getContent().msgtype == 'm.image'"
-      >
+      <div class="col-12">
         <img
           :src="getHttpUrl(postData['initial-message'].getContent().url)"
           :alt="postData['initial-message'].getContent().body"
         />
       </div>
+      <div class="col-12 post-message">
+        {{ postData["initial-message"].getContent().body }}
+      </div>
     </div>
     <div v-if="postData.replies.length > 0" class="row reply-messages">
       <Reply
-        class="reply"
         v-for="(subReply, key) in postData.replies"
         :key="key"
+        :roomId="roomId"
         :reply="subReply"
       />
     </div>
@@ -40,12 +34,25 @@
         "
         >{{ $t("show-reply-input") }}
       </span>
+      <span
+        class="clickable"
+        @click="
+          changeElementVisibility('UM<' + postData['initial-message'].getId())
+        "
+        >{{ $t("show-update-input") }}
+      </span>
       <span class="clickable" @click="deletePost()"
         >{{ $t("show-delete-post") }}
       </span>
       <CreateReply
         :createReplyId="'CR<' + postData['initial-message'].getId()"
         :roomId="roomId"
+        hidden
+      />
+      <UpdateMessage
+        :updateMessageId="'UM<' + postData['initial-message'].getId()"
+        :roomId="roomId"
+        :postMessage="postData['initial-message'].getContent().body"
         hidden
       />
     </div>
@@ -55,12 +62,20 @@
 <script>
 import Reply from "@/components/views/room/Reply.vue";
 import CreateReply from "@/components/views/room/CreateReply.vue";
+import UpdateMessage from "@/components/views/room/UpdateMessage.vue";
 import { changeElementVisibility } from "@/utils/utils.js";
 
 export default {
   name: "Post",
-  components: { Reply, CreateReply },
-  props: { postData: Object, roomId: String },
+  components: {
+    Reply,
+    CreateReply,
+    UpdateMessage,
+  },
+  props: {
+    postData: Object,
+    roomId: String,
+  },
   methods: {
     changeElementVisibility,
     getHttpUrl(mxcUrl) {
@@ -74,7 +89,7 @@ export default {
       let room = matrixClient.getRoom(this.roomId);
 
       // get IDs of the post and all related replies
-      let eventIds = getEventIds(this.postData);
+      let eventIds = this.getEventIds(this.postData);
 
       // remove all related events from timeline and redact all on homeserver
       if (userId == postSenderId) {
@@ -89,19 +104,18 @@ export default {
         }
       }
     },
+    getEventIds(postData) {
+      let ids = [];
+      // id of initial post
+      ids.push(postData["initial-message"].getId());
+      // ids of replies
+      postData.replies.forEach((reply) => {
+        ids.push(reply["reply-message"].getId());
+      });
+      return ids;
+    },
   },
 };
-
-function getEventIds(postData) {
-  let ids = [];
-  // id of initial post
-  ids.push(postData["initial-message"].getId());
-  // ids of replies
-  postData.replies.forEach((reply) => {
-    ids.push(reply["reply-message"].getId());
-  });
-  return ids;
-}
 </script>
 
 <style scoped lang="css">
@@ -120,7 +134,10 @@ h5 {
   margin-top: 2.5%;
   text-decoration: underline;
 }
-.reply {
-  margin-top: 5%;
+.post-message {
+  margin-top: 2.5%;
+}
+.reply-messages {
+  margin-bottom: 5%;
 }
 </style>

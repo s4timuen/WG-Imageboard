@@ -1,0 +1,82 @@
+<template>
+  <div :id="updateMessageId" class="container-fluid">
+    <div class="row">
+      <label class="col-8 offset-2 d-flex justify-content-start">{{
+        $t("update")
+      }}</label>
+      <textarea
+        :id="'TA<' + updateMessageId"
+        type="text"
+        class="col-8 offset-2 d-flex justify-content-start"
+        :value="postMessage"
+      />
+    </div>
+    <div class="row">
+      <button
+        id="update-message-send-button"
+        class="
+          offset-2
+          d-flex
+          justify-content-center
+          update-message-send-button
+        "
+        type="button"
+        @click="updateMessage('TA<' + updateMessageId)"
+      >
+        {{ $t("send-update-button") }}
+      </button>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  name: "UpdateMessage",
+  props: {
+    updateMessageId: String,
+    roomId: String,
+    postMessage: String,
+  },
+  methods: {
+    updateMessage(textAreaId) {
+      let matrixClient = this.$store.getters.matrixClient;
+      let message = document.getElementById(textAreaId).value;
+      let eventId = this.updateMessageId.substring(3);
+
+console.log(this.roomId)
+
+      let content = {
+        body: message,
+        "m.relates_to": {
+          replace: {
+            event_id: eventId,
+          },
+        },
+        msgtype: "m.text",
+      };
+
+      if (message) {
+        matrixClient.sendEvent(
+          this.roomId,
+          "m.room.message",
+          content,
+          "",
+          (err) => {
+            console.log(err);
+          }
+        );
+      }
+    },
+  },
+};
+</script>
+
+<style scoped lang="css">
+label {
+  margin-top: 2.5%;
+}
+.update-message-send-button {
+  margin-top: 2.5%;
+  margin-bottom: 2.5%;
+}
+</style>
