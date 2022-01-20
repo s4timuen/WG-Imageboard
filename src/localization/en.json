@@ -16,7 +16,8 @@
     "send-post-button": "Send Post",
     "send-reply-button": "Send Reply",
     "send-update-button": "Send Edit",
-    "show-reply-input": "Reply", 
+    "leave-room-button": "Leave Room",
+    "show-reply-input": "Reply",
     "show-delete-post": "Delete",
     "show-update-input": "Edit",
     "save": "Save",
@@ -26,6 +27,7 @@
     "list-public-rooms": "Join public rooms: ",
     "user-rooms": "Your rooms: ",
     "wellcome": "Wellcome to WG-Imageboard!",
+    "options": "Options: ",
     "footer-fuhagen": "FernUniversität in Hagen",
     "footer-author": "Tim Münzinger",
     "footer-year": "2022",
@@ -33,5 +35,8 @@
     "alert-room-already-joined": "You habe alredy joined this room!",
     "alert-unauthorized-post-or-reply-edit": "You are not authorized to edit this post or reply!",
     "alert-unauthorized-deletion-reply": "You are not authorized to delete this reply!",
-    "alert-unauthorized-deletion-post":"You are not authorized to delete this post!"
+    "alert-unauthorized-deletion-post": "You are not authorized to delete this post!",
+    "alert-confirm-deletion-post": "Sure to delete this post?",
+    "alert-confirm-deletion-reply": "Sure to delete this reply?",
+    "alert-confirm-leave-room": "Are you sure to leave this room?"
 }

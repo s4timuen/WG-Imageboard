@@ -1,5 +1,8 @@
 <template>
   <div id="room-page" class="container-fluid">
+    <div class="row">
+      <OptionsBar :roomId="roomId" />
+    </div>
     <div id="room-create-post" class="row">
       <CreatePost :roomId="roomId" />
     </div>
@@ -17,6 +20,7 @@
 <script>
 import Post from "@/components/views/room/Post.vue";
 import CreatePost from "@/components/views/room/CreatePost.vue";
+import OptionsBar from "@/components/views/room/OptionsBar.vue";
 import { checkSession } from "@/utils/session.js";
 import { buildPosts, applyEdits } from "@/utils/posts.js";
 
@@ -25,6 +29,7 @@ export default {
   components: {
     Post,
     CreatePost,
+    OptionsBar,
   },
   props: {
     roomId: String,

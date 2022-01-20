@@ -49,7 +49,7 @@ export default {
 
       // remove event from timeline and redact on homeserver
       if (userId == replySenderId) {
-        if (window.confirm("Sure to delete this reply?")) {
+        if (window.confirm(this.$t("alert-confirm-deletion-reply"))) {
           timeline.removeEvent(eventId);
           matrixClient.redactEvent(roomId, eventId, "", {
             reason: "Reply deleted by user.",

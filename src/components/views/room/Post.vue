@@ -93,7 +93,7 @@ export default {
 
       // remove all related events from timeline and redact all on homeserver
       if (userId === postSenderId) {
-        if (window.confirm("Sure to delete this post?")) {
+        if (window.confirm(this.$t("alert-confirm-deletion-post"))) {
           for (let eventId of eventIds) {
             let timeline = room.getTimelineForEvent(eventId);
             timeline.removeEvent(eventId);
