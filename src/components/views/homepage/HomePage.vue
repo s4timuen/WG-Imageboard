@@ -1,5 +1,6 @@
 <template>
   <div id="home-page" class="container-fluid">
+    <OverlayCreateRoom id="overlay-create-room" hidden />
     <div id="wellcome-section" class="row">
       <h3 class="col-12">{{ $t("wellcome") }}</h3>
       <span class="col-12">{{ $t("lorem-ipsum") }}</span>
@@ -15,6 +16,13 @@
           :key="key"
           :value="room.name"
           @click="openRoom(room.roomId)"
+        />
+        <input
+          id="create-room-button"
+          class="col-12"
+          type="button"
+          :value="$t('create-room')"
+          @click="openOverlay('overlay-create-room')"
         />
       </div>
       <div class="col-12 col-md-4 offset-md-1">
@@ -34,10 +42,15 @@
 </template>
 
 <script>
+import OverlayCreateRoom from "@/components/views/homepage/OverlayCreateRoom.vue";
 import { checkSession } from "@/utils/session.js";
+import { changeElementVisibility } from "@/utils/utils.js";
 
 export default {
   name: "HomePage",
+  components: {
+    OverlayCreateRoom,
+  },
   data: function () {
     return {
       joinedRooms: [],
@@ -63,6 +76,9 @@ export default {
         alert(this.$t("alert-room-already-joined"));
       }
     },
+    openOverlay: function (id) {
+      changeElementVisibility(id);
+    },
   },
   mounted: async function () {
     let matrixClient = this.$store.getters.matrixClient;
@@ -87,4 +103,7 @@ export default {
 </script>
 
 <style scoped lang="css">
+#create-room-button {
+  margin-top: 2.5%;
+}
 </style>
