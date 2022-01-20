@@ -1,23 +1,30 @@
 <template>
   <div class="container-fluid reply">
+    <!-- reply -->
     <div class="row">
+      <!-- reply meta data -->
       <div class="reply-meta-info col-12">
         <span>{{ reply["reply-message"].getSender() }}</span>
         <span>{{ reply["reply-message"].getDate() }}</span>
       </div>
+      <!-- reply message -->
       <div :id="reply['reply-message'].getId()" class="col-12">
         {{ reply["reply-message"].getContent().body }}
       </div>
     </div>
+    <!-- reply options -->
     <div class="row">
+      <!-- edit reply -->
       <span
         class="clickable"
         @click="changeElementVisibility('UM<' + reply['reply-message'].getId())"
         >{{ $t("show-update-input") }}
       </span>
+      <!-- delete reply -->
       <span class="clickable" @click="deleteReply()"
         >{{ $t("show-delete-post") }}
       </span>
+      <!-- edit reply input -->
       <UpdateMessage
         :updateMessageId="'UM<' + reply['reply-message'].getId()"
         :roomId="roomId"

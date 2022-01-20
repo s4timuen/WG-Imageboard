@@ -1,12 +1,16 @@
 <template>
   <div id="home-page" class="container-fluid">
+    <!-- overlay -->
     <OverlayCreateRoom id="overlay-create-room" hidden />
+    <!-- welcome section -->
     <div id="wellcome-section" class="row">
       <h3 class="col-12">{{ $t("wellcome") }}</h3>
       <span class="col-12">{{ $t("lorem-ipsum") }}</span>
     </div>
+    <!-- rooms section -->
     <div id="rooms-section" class="row">
       <div class="col-12 col-md-4 offset-md-1">
+        <!-- rooms joined by user -->
         <span class="col-12">{{ $t("user-rooms") }}</span>
         <input
           :id="key"
@@ -17,6 +21,7 @@
           :value="room.name"
           @click="openRoom(room.roomId)"
         />
+        <!-- create room -->
         <input
           id="create-room-button"
           class="col-12"
@@ -25,6 +30,7 @@
           @click="openOverlay('overlay-create-room')"
         />
       </div>
+      <!-- public rooms -->
       <div class="col-12 col-md-4 offset-md-1">
         <span class="col-12">{{ $t("list-public-rooms") }}</span>
         <input

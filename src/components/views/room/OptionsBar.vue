@@ -1,8 +1,14 @@
 <template>
   <div id="room-options-bar" class="container-fluid rounded">
     <div class="row">
-        <span>{{ $t("options") }}</span>
-      <button id="leave-room-button" class="options-button" type="button" @click="leaveRoom()">
+      <span>{{ $t("options") }}</span>
+      <!-- leave room option -->
+      <button
+        id="leave-room-button"
+        class="options-button"
+        type="button"
+        @click="leaveRoom()"
+      >
         {{ $t("leave-room-button") }}
       </button>
     </div>
@@ -29,6 +35,6 @@ export default {
 
 <style scoped lang="css">
 .options-button {
-    margin-left: 2.5%;
+  margin-left: 2.5%;
 }
 </style>

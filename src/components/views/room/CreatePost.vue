@@ -1,6 +1,7 @@
 <template>
   <div class="container-fluid col-12 border rounded">
     <h4 class="col-12 create-post">{{ $t("create-post") }}</h4>
+    <!-- input post title -->
     <div class="row">
       <label class="col-8 offset-2 d-flex justify-content-start">{{
         $t("title")
@@ -9,10 +10,10 @@
         id="create-post-title-input"
         type="text"
         class="col-8 offset-2 d-flex justify-content-start"
-        placeholder="Enter Title"
+        :placeholder="$t('placeholder-enter-title')"
       />
     </div>
-
+    <!-- input post message -->
     <div class="row">
       <label class="col-8 offset-2 d-flex justify-content-start">{{
         $t("message")
@@ -21,10 +22,10 @@
         id="create-post-message-input"
         type="text"
         class="col-8 offset-2 d-flex justify-content-start"
-        placeholder="Enter Messge"
+        :placeholder="$t('placeholder-enter-message')"
       />
     </div>
-
+    <!-- input post image -->
     <div class="row">
       <input
         id="create-post-image-input"
@@ -33,7 +34,7 @@
         @change="onFileSelected"
       />
     </div>
-
+    <!-- send post button -->
     <div class="row">
       <button
         id="create-post-send-button"

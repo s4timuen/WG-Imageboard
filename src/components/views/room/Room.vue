@@ -1,11 +1,14 @@
 <template>
   <div id="room-page" class="container-fluid">
+    <!-- room options bar -->
     <div class="row">
       <OptionsBar :roomId="roomId" />
     </div>
+    <!-- room create post -->
     <div id="room-create-post" class="row">
       <CreatePost :roomId="roomId" />
     </div>
+    <!-- room posts -->
     <div id="room-posts" class="row">
       <Post
         v-for="(post, key) in posts"

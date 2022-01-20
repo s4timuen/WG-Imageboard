@@ -1,5 +1,6 @@
 <template>
   <div :id="updateMessageId" class="container-fluid">
+    <!-- message edit input -->
     <div class="row">
       <label class="col-8 offset-2 d-flex justify-content-start">{{
         $t("update")
@@ -11,6 +12,7 @@
         :value="messageContent.body"
       />
     </div>
+    <!-- send message edit button -->
     <div class="row">
       <button
         id="update-message-send-button"

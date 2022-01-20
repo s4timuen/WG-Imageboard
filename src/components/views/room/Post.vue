@@ -1,23 +1,29 @@
 <template>
   <div class="container-fluid border rounded">
+    <!-- post -->
     <div :id="postData['initial-message'].getId()" class="row">
+      <!-- post title -->
       <h5 class="col-12">
         {{ postData["initial-message"].getContent().header }}
       </h5>
+      <!-- post meta data -->
       <div class="post-meta-info col-12">
         <span>{{ postData["initial-message"].getSender() }}</span>
         <span>{{ postData["initial-message"].getDate() }}</span>
       </div>
+      <!--post image -->
       <div class="col-12">
         <img
           :src="getHttpUrl(postData['initial-message'].getContent().url)"
           :alt="postData['initial-message'].getContent().body"
         />
       </div>
+      <!-- post message -->
       <div class="col-12 post-message">
         {{ postData["initial-message"].getContent().body }}
       </div>
     </div>
+    <!-- replies -->
     <div v-if="postData.replies.length > 0" class="row reply-messages">
       <Reply
         v-for="(subReply, key) in postData.replies"
@@ -26,7 +32,9 @@
         :reply="subReply"
       />
     </div>
+    <!-- post options -->
     <div class="row">
+      <!-- reply to post -->
       <span
         class="clickable"
         @click="
@@ -34,6 +42,7 @@
         "
         >{{ $t("show-reply-input") }}
       </span>
+      <!-- edit post -->
       <span
         class="clickable"
         @click="
@@ -41,14 +50,17 @@
         "
         >{{ $t("show-update-input") }}
       </span>
+      <!-- delete post -->
       <span class="clickable" @click="deletePost()"
         >{{ $t("show-delete-post") }}
       </span>
+      <!-- create reply input -->
       <CreateReply
         :createReplyId="'CR<' + postData['initial-message'].getId()"
         :roomId="roomId"
         hidden
       />
+      <!-- edit post input -->
       <UpdateMessage
         :updateMessageId="'UM<' + postData['initial-message'].getId()"
         :roomId="roomId"

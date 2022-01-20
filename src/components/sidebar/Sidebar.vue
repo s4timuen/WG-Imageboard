@@ -1,18 +1,17 @@
 <template>
   <div id="sidebar" class="container-fluid rounded">
+    <!-- navigation -->
     <ul id="sidebar-nav">
       <li>
         <router-link to="/">
           {{ $t("link-home") }}
         </router-link>
       </li>
-
       <li>
         <router-link to="/profile">
           {{ $t("link-profile") }}
         </router-link>
       </li>
-
       <li id="li-logout" @click="logoutUser()">
         <router-link to="/">
           {{ $t("logout") }}

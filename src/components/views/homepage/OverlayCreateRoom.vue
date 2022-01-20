@@ -11,7 +11,7 @@
           id="create-room-name-input"
           type="text"
           class="col-8 offset-2 d-flex justify-content-start"
-          placeholder="Enter Room Name"
+          :placeholder="$t('placeholder-enter-room-name')"
           required
         />
       </div>
@@ -30,7 +30,7 @@
             justify-content-start
             create-room-element
           "
-          placeholder="Enter Room Topic"
+          :placeholder="$t('placeholder-enter-room-topic')"
         />
       </div>
       <!-- room visibility -->

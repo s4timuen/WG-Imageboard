@@ -1,5 +1,6 @@
 <template>
   <div :id="createReplyId" class="container-fluid">
+    <!-- input reply message -->
     <div class="row">
       <label class="col-8 offset-2 d-flex justify-content-start">{{
         $t("reply")
@@ -8,9 +9,10 @@
         :id="'TA<' + createReplyId"
         type="text"
         class="col-8 offset-2 d-flex justify-content-start"
-        placeholder="Enter Reply"
+        :placeholder="$t('placeholder-enter-reply')"
       />
     </div>
+    <!-- send reply button -->
     <div class="row">
       <button
         id="create-reply-send-button"

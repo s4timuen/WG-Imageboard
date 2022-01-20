@@ -6,7 +6,7 @@
     <div class="row">
       <h1 class="col-12 align-content-center">{{ $t("registration") }}</h1>
     </div>
-
+    <!-- input user email -->
     <div class="row">
       <label class="col-8 offset-2 d-flex justify-content-start">{{
         $t("email")
@@ -15,11 +15,11 @@
         id="user-registration-email-input"
         type="text"
         class="col-8 offset-2 d-flex justify-content-start"
-        placeholder="Enter email"
+        :placeholder="$t('placeholder-enter-email')"
         required="true"
       />
     </div>
-
+    <!-- input user name -->
     <div class="row">
       <label class="col-8 offset-2 d-flex justify-content-start">{{
         $t("username")
@@ -28,11 +28,11 @@
         id="user-registration-name-input"
         type="text"
         class="col-8 offset-2 d-flex justify-content-start"
-        placeholder="Enter Username"
+        :placeholder="$t('placeholder-enter-username')"
         required="true"
       />
     </div>
-
+    <!-- input user password -->
     <div class="row">
       <label class="col-8 offset-2 d-flex justify-content-start">{{
         $t("password")
@@ -41,11 +41,11 @@
         id="user-registration-password-input"
         type="password"
         class="col-8 offset-2 d-flex justify-content-start"
-        placeholder="Enter Password"
+        :placeholder="$t('placeholder-enter-password')"
         required="true"
       />
     </div>
-
+    <!-- input user confirm password -->
     <div class="row">
       <label class="col-8 offset-2 d-flex justify-content-start">{{
         $t("confirm-password")
@@ -54,11 +54,11 @@
         id="user-registration-password-confirm-input"
         type="password"
         class="col-8 offset-2 d-flex justify-content-start"
-        placeholder="Confirm Password"
+        :placeholder="$t('placeholder-confirm-password')"
         required="true"
       />
     </div>
-
+    <!-- register user button -->
     <div class="row">
       <button
         id="registration-button"

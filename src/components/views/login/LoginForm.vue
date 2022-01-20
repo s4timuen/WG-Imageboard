@@ -3,7 +3,7 @@
     <div class="row">
       <h1 class="col-12 align-content-center">{{ $t("login") }}</h1>
     </div>
-
+    <!-- input user name -->
     <div class="row">
       <label class="col-8 offset-2 d-flex justify-content-start">{{
         $t("username")
@@ -12,11 +12,11 @@
         id="user-login-name-input"
         type="text"
         class="col-8 offset-2 d-flex justify-content-start"
-        placeholder="Enter Username"
+        :placeholder="$t('placeholder-enter-username')"
         required="true"
       />
     </div>
-
+    <!-- input user password -->
     <div class="row">
       <label class="col-8 offset-2 d-flex justify-content-start">{{
         $t("password")
@@ -25,11 +25,11 @@
         id="user-login-password-input"
         type="password"
         class="col-8 offset-2 d-flex justify-content-start"
-        placeholder="Enter Password"
+        :placeholder="$t('placeholder-enter-password')"
         required="true"
       />
     </div>
-
+    <!-- input remember me -->
     <div class="row remember-me-section">
       <input
         id="remember-me-checkbox"
@@ -39,7 +39,7 @@
       />
       <p class="d-flex justify-content-start">{{ $t("remember-me") }}</p>
     </div>
-
+    <!-- login user button -->
     <div class="row">
       <button
         id="login-button"
@@ -74,7 +74,7 @@ export default {
           password: this.userPasswordLogin,
         })
         .then((response) => {
-          // cookie session duration & remember me 
+          // cookie session duration & remember me
           let durability = "15m";
           if (document.getElementById("remember-me-checkbox").checked) {
             durability = "1M";
@@ -91,7 +91,7 @@ export default {
       matrixClient.once("sync", function (state, prevState, res) {
         if (state === "PREPARED") {
           console.log("Matrix client prepared");
-          // redirect homepage 
+          // redirect homepage
           THIS.$router.push({ name: "Home" });
         }
         if (state !== "PREPARED") {
