@@ -126,7 +126,6 @@ export default {
     rooms.forEach((room) => {
       let members = room.getMembers();
       members.forEach((member) => {
-        console.log(member);
         let userId = matrixClient.getUserId();
         let memberId = member.userId;
         if (userId === memberId && member.membership === "invite") {

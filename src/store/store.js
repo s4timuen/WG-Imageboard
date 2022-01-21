@@ -16,6 +16,9 @@ const store = new Vuex.Store({
         matrixClient: client,
     },
     mutations: {
+        resetMatrixClient(state) {
+            state.matrixClient = matrix.createClient(options);
+        },
     },
     getters: {
         matrixClient: state => state.matrixClient,

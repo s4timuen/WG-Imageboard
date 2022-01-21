@@ -28,10 +28,17 @@ export default {
     logoutUser() {
       let matrixClient = this.$store.getters.matrixClient;
       if (matrixClient.isLoggedIn()) {
-        matrixClient.logout(this.$cookie.get("matrix-user-token"));
+        matrixClient.logout((err) => {
+          console.log(err);
+        });
         matrixClient.stopClient();
-        this.$cookie.delete("matrix-user-token");
-        this.$router.push({ name: "Login" });
+        this.$store.commit("resetMatrixClient");
+        if (this.$cookie.get("matrix-user-token") !== null) {
+          this.$cookie.delete("matrix-user-token");
+        }
+        if (this.$router.currentRoute.name !== "Login") {
+          this.$router.push({ name: "Login" });
+        }
       }
     },
   },
