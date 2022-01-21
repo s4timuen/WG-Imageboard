@@ -62,7 +62,7 @@ export default {
     let room = matrixClient.getRoom(this.roomId);
     this.posts = await this.getPosts(room.timeline);
 
-    // listen to timeline events (new posts and replies)
+    // listen to timeline events (new posts, replies and CRUD)
     matrixClient.on("Room.timeline", async function (event) {
       if (
         event.getType() === "m.room.message" ||

@@ -9,9 +9,10 @@
     </div>
     <!-- rooms section -->
     <div id="rooms-section" class="row">
-      <div class="col-12 col-md-4 offset-md-1">
+      <!-- user rooms -->
+      <div class="col-12 col-md-4 offset-md-1 rooms-list">
         <!-- rooms joined by user -->
-        <span class="col-12">{{ $t("user-rooms") }}</span>
+        <label class="col-12">{{ $t("list-user-rooms") }}</label>
         <input
           :id="key"
           class="col-12"
@@ -21,7 +22,7 @@
           :value="room.name"
           @click="openRoom(room.roomId)"
         />
-        <!-- create room -->
+        <!-- create room button -->
         <input
           id="create-room-button"
           class="col-12"
@@ -31,8 +32,8 @@
         />
       </div>
       <!-- public rooms -->
-      <div class="col-12 col-md-4 offset-md-1">
-        <span class="col-12">{{ $t("list-public-rooms") }}</span>
+      <div class="col-12 col-md-4 offset-md-1 rooms-list">
+        <label class="col-12">{{ $t("list-public-rooms") }}</label>
         <input
           :id="key"
           class="col-12"
@@ -41,6 +42,22 @@
           :key="key"
           :value="room.name"
           @click="joinRoom(room.room_id)"
+        />
+      </div>
+      <!-- pending room invites -->
+      <div class="col-12 col-md-4 offset-md-1 rooms-list">
+        <label class="col-12">{{ $t("list-invited-rooms") }}</label>
+        <span v-if="invitedRooms.length === 0">{{
+          $t("list-invited-rooms-none")
+        }}</span>
+        <input
+          :id="key"
+          class="col-12"
+          type="button"
+          v-for="(room, key) in invitedRooms"
+          :key="key"
+          :value="room.name"
+          @click="joinRoom(room.roomId)"
         />
       </div>
     </div>
@@ -61,6 +78,7 @@ export default {
     return {
       joinedRooms: [],
       publicRooms: [],
+      invitedRooms: [],
     };
   },
   methods: {
@@ -94,22 +112,38 @@ export default {
     await checkSession(this, accessToken);
 
     // get list of joined rooms
-    let listJoinedRoomsIds = await matrixClient.getJoinedRooms();
-    await listJoinedRoomsIds.joined_rooms.forEach((roomId) => {
+    let joinedRoomsIds = await matrixClient.getJoinedRooms();
+    await joinedRoomsIds.joined_rooms.forEach((roomId) => {
       this.joinedRooms.push(matrixClient.getRoom(roomId));
     });
 
     // get list of public rooms
-    let listPublicRooms = await matrixClient.publicRooms();
-    await listPublicRooms.chunk.forEach((room) => {
-      this.publicRooms.push(room);
+    let publicRooms = await matrixClient.publicRooms();
+    this.publicRooms = publicRooms.chunk;
+
+    // get list of room the user has been invited to
+    let rooms = await matrixClient.getRooms();
+    rooms.forEach((room) => {
+      let members = room.getMembers();
+      members.forEach((member) => {
+        console.log(member);
+        let userId = matrixClient.getUserId();
+        let memberId = member.userId;
+        if (userId === memberId && member.membership === "invite") {
+          this.invitedRooms.push(room);
+        }
+      });
     });
+    // forEach(room => { room.getMembers().forEach(member => {member.events.membership === "invite"})})
   },
 };
 </script>
 
 <style scoped lang="css">
 #create-room-button {
+  margin-top: 1%;
+}
+.rooms-list {
   margin-top: 2.5%;
 }
 </style>

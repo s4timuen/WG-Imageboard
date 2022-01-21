@@ -59,6 +59,12 @@ export default {
 </script>
 
 <style scoped lang="css">
+#room-options-bar {
+  margin-top: 1%;
+  margin-bottom: 1%;
+  margin-left: 2%;
+  margin-right: 2%;
+}
 .options-button {
   margin-left: 2.5%;
 }
