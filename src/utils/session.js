@@ -3,7 +3,13 @@ async function checkSession(context, accessToken) {
     // no valid session token
     if (accessToken === null && context.$router.currentRoute.name !== "Login") {
         matrixClient.stopClient();
-        context.$router.push({ name: "Login" });
+        context.$store.commit("resetMatrixClient");
+        if (context.$cookie.get("matrix-user-token") !== null) {
+            context.$cookie.delete("matrix-user-token");
+        }
+        if (context.$router.currentRoute.name !== "Login") {
+            context.$router.push({ name: "Login" });
+        }
     }
     // valid session token after reload
     if (!matrixClient.isLoggedIn() && accessToken !== null) {
