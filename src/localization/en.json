@@ -2,6 +2,8 @@
     "wg-imageboard-title": "WG-Imageboard",
     "link-home": "Home",
     "link-profile": "Profile",
+    "user-displayname": "Displayname: ",
+    "user-id": "User-ID: ",
     "username": "Username : ",
     "password": "Password : ",
     "confirm-password": "Confirm Password: ",

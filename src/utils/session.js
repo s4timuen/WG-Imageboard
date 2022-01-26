@@ -1,8 +1,7 @@
 async function checkSession(context, accessToken) {
     let matrixClient = context.$store.getters.matrixClient;
     // no valid session token
-    if (accessToken === null && context.$router.currentRoute.name !== "Login") {
-        matrixClient.stopClient();
+    if (accessToken === null) {
         context.$store.commit("resetMatrixClient");
         if (context.$cookie.get("matrix-user-token") !== null) {
             context.$cookie.delete("matrix-user-token");

@@ -68,6 +68,7 @@
 import OverlayCreateRoom from "@/components/views/homepage/OverlayCreateRoom.vue";
 import { checkSession } from "@/utils/session.js";
 import { changeElementVisibility } from "@/utils/utils.js";
+import { checkUserGamificationData } from "@/utils/gamification.js";
 
 export default {
   name: "HomePage",
@@ -85,16 +86,32 @@ export default {
     openRoom(id) {
       this.$router.push({ name: "Room", params: { roomId: id } });
     },
-    async joinRoom(id) {
+    async joinRoom(roomId) {
+      let matrixClient = this.$store.getters.matrixClient;
       let alreadyJoined = false;
-      this.joinedRooms.forEach((room) => {
-        if (id === room.roomId) {
+      // check already joined room
+      this.joinedRooms.forEach(async (room) => {
+        if (roomId === room.roomId) {
           alreadyJoined = true;
         }
       });
       if (!alreadyJoined) {
-        await this.$store.getters.matrixClient.joinRoom(id);
-        this.$router.push({ name: "Room", params: { roomId: id } });
+        // check if gamification data is alredy available or create respective data
+        let userId = matrixClient.getUserId();
+        let roomVisibility = await matrixClient
+          .getRoomDirectoryVisibility(roomId)
+          .then((response) => {
+            return response;
+          });
+        await checkUserGamificationData(
+          userId,
+          roomId,
+          roomVisibility.visibility
+        );
+
+        // join room and redirect to respective room
+        await matrixClient.joinRoom(roomId);
+        this.$router.push({ name: "Room", params: { roomId: roomId } });
       }
       if (alreadyJoined) {
         alert(this.$t("alert-room-already-joined"));
@@ -133,7 +150,6 @@ export default {
         }
       });
     });
-    // forEach(room => { room.getMembers().forEach(member => {member.events.membership === "invite"})})
   },
 };
 </script>

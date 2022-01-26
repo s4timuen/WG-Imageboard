@@ -1,7 +1,12 @@
 <template>
   <div id="profile-page" class="container-fluid rounded">
-    <div class="row">
-      {{ user }}
+    <div class="col-12 data-field">
+      <span class="col-4">{{ $t("user-displayname") }}</span>
+      <span class="col-4">{{ userData.displayName }}</span>
+    </div>
+    <div class="col-12 data-field">
+      <span class="col-4">{{ $t("user-id") }}</span>
+      <span class="col-4">{{ userData.userId }}</span>
     </div>
   </div>
 </template>
@@ -13,7 +18,7 @@ export default {
   name: "ProfilePage",
   data: function () {
     return {
-      user: {},
+      userData: {},
     };
   },
   mounted: async function () {
@@ -24,10 +29,14 @@ export default {
     await checkSession(this, accessToken);
 
     // if logged and session valid
-    this.user = matrixClient.getUser(matrixClient.getUserId());
+    let userId = matrixClient.getUserId();
+    this.userData = matrixClient.getUser(userId);
   },
 };
 </script>
 
 <style scoped lang="css">
+.data-field {
+  text-align: left;
+}
 </style>
