@@ -27,6 +27,8 @@
 </template>
 
 <script>
+import { updateUserGamificationData } from "@/utils/gamification.js";
+
 export default {
   name: "CreateReply",
   props: {
@@ -36,6 +38,7 @@ export default {
   methods: {
     sendReply(textAreaId) {
       let matrixClient = this.$store.getters.matrixClient;
+      let userId = matrixClient.getUserId();
       let message = document.getElementById(textAreaId).value;
       let eventId = this.createReplyId.substring(3);
 
@@ -44,6 +47,10 @@ export default {
         "m.relates_to": {
           "m.in_reply_to": {
             event_id: eventId,
+          },
+          game: {
+            likes: [],
+            dislikes: [],
           },
         },
         msgtype: "m.text",
@@ -60,6 +67,16 @@ export default {
           }
         );
       }
+
+      // gamification event
+      updateUserGamificationData(
+        userId,
+        this.roomId,
+        undefined,
+        "increment-replies-count"
+      );
+
+      // reset input fields
       document.getElementById(textAreaId).value = "";
     },
   },

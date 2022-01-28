@@ -11,15 +11,16 @@
  * https://spec.matrix.org/v1.1/client-server-api/#profiles 
  */
 import { getFileServerData, setFileServerData } from "@/api/fileServer.js";
+import { urlFileServer, portFileServer, fileServerPath } from "@/utils/config.js";
 
 // gamification events
 const gameEvents = Object.freeze({
-    0: "increment-like-count",
-    1: "reduce-like-count",
-    2: "increment-post-count",
-    3: "reduce-post-count",
-    4: "increment-reply-count",
-    5: "reduce-reply-ount",
+    0: "increment-likes-count",
+    1: "reduce-likes-count",
+    2: "increment-posts-count",
+    3: "reduce-posts-count",
+    4: "increment-replies-count",
+    5: "reduce-replies-ount",
 });
 
 // gamification error
@@ -36,44 +37,45 @@ const gamificationInfo = Object.freeze({
 // default game and room data
 let defaultGameData = {
     "user_id": "",
-    "rooms": [],
+    "rooms": {},
     "rank": "newbie",
     "badges": []
 }
 
-let defaultRoomData = {
-    "room_id": "",
-    "room_visibility": "",
-    "posts_count": 0,
-    "replies_count": 0,
-    "likes_count": 0
-}
-
-// file server gamification data URL
-let baseUrl = "http://192.168.0.233:8080/";
-let path = "more/files/";
+let defaultRoomData = [
+    "",
+    {
+        "room_visibility": "",
+        "posts_count": 0,
+        "replies_count": 0,
+        "likes_count": 0
+    }
+]
 
 // get gamification data for respective user
 async function getUserGamificationData(userId) {
     let fileName = await userId.replaceAll(":", '_');
     fileName = fileName.replaceAll('.', '_');
-    let url = baseUrl + path;
+    let url = urlFileServer + portFileServer + fileServerPath;
     let gameData = await getFileServerData(url, fileName);
     return gameData;
 }
 
 // set gamification data for respective user
-async function updateUserGamificationData(userId, gameEvent) {
+async function updateUserGamificationData(userId, roomId, eventId, gameEvent) {
     let fileName = await userId.replaceAll(":", '_');
     fileName = fileName.replaceAll('.', '_');
 
-    let url = baseUrl + path;
+    let url = urlFileServer + portFileServer + fileServerPath;
     let gameData = await getFileServerData(url, fileName);
+
 
     // update game data
     switch (gameEvent) {
         case gameEvents[0]:
             // TODO: event function
+            gameData.rooms[roomId].likes_count += 1;
+            // change data strukture to rooms: [id: {} ]
             break;
         case gameEvents[1]:
             // TODO: event function
@@ -90,6 +92,8 @@ async function updateUserGamificationData(userId, gameEvent) {
         case gameEvents[5]:
             // TODO: event function
             break;
+        // likes -> user count + and event count + (message count)
+        // likes -> how to only like or dislike and only one per user? game:{likes:[userIds], dislikes:[userIds]}
         default:
             throw gamificationErrors[0];
     }
@@ -99,30 +103,30 @@ async function updateUserGamificationData(userId, gameEvent) {
 async function checkUserGamificationData(userId, roomId, roomVisibility) {
     let fileName = await userId.replaceAll(":", '_');
     fileName = fileName.replaceAll('.', '_');
-    let url = baseUrl + path;
+    let url = urlFileServer + portFileServer + fileServerPath;
     let gameData = null;
     gameData = await getFileServerData(url, fileName);
 
     // existing user, gamification data available
     if (gameData !== null) {
 
-        let roomGameData = null;
-        gameData.rooms.forEach(room => {
-            if (room.room_id === roomId) {
+        let roomGameData = [];
+        Object.entries(gameData.rooms).forEach(room => {
+            if (room[0] === roomId) {
                 roomGameData = room;
             }
         });
 
         // existing room gamification data
-        if (roomGameData !== null) {
+        if (roomGameData.length !== 0) {
             console.log(gamificationInfo[0]);
         }
         // new room gamification data
-        if (roomGameData === null) {
+        if (roomGameData.length === 0) {
             let newDefaultRoomData = defaultRoomData;
-            defaultRoomData.room_id = roomId;
-            defaultRoomData.room_visibility = roomVisibility;
-            gameData.rooms.push(newDefaultRoomData);
+            newDefaultRoomData[0] = roomGameData[0];
+            newDefaultRoomData[1].room_visibility = roomGameData[1].roomVisibility;
+            gameData.rooms[defaultRoomData[0]] = defaultRoomData[1]
             setFileServerData(url, fileName, gameData);
         }
     }
@@ -130,10 +134,10 @@ async function checkUserGamificationData(userId, roomId, roomVisibility) {
     if (gameData === null) {
         let newDefaultGameData = defaultGameData;
         let newDefaultRoomData = defaultRoomData;
-        defaultRoomData.room_id = roomId;
-        defaultRoomData.room_visibility = roomVisibility;
+        newDefaultRoomData[0] = roomId;
+        newDefaultRoomData[1].room_visibility = roomVisibility;
         newDefaultGameData.user_id = userId;
-        newDefaultGameData.rooms.push(newDefaultRoomData);
+        newDefaultGameData.rooms[newDefaultRoomData[0]] = newDefaultRoomData[1];
         setFileServerData(url, fileName, newDefaultGameData);
     }
 }

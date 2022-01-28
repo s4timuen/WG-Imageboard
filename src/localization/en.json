@@ -14,6 +14,8 @@
     "message": "Message: ",
     "reply": "Reply: ",
     "update": "Edit: ",
+    "like": "Like",
+    "dislike": "Dislike",
     "upload-image-button": "Upload Image",
     "send-post-button": "Send Post",
     "send-reply-button": "Send Reply",

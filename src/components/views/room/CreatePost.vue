@@ -49,6 +49,8 @@
 </template>
 
 <script>
+import { updateUserGamificationData } from "@/utils/gamification.js";
+
 export default {
   name: "CreatePost",
   props: { roomId: String },
@@ -61,6 +63,7 @@ export default {
     },
     async sendPost() {
       let matrixClient = this.$store.getters.matrixClient;
+      let userId = matrixClient.getUserId();
       let title = document.getElementById("create-post-title-input").value;
       let message = document.getElementById("create-post-message-input").value;
 
@@ -76,6 +79,10 @@ export default {
             let content = {
               header: title,
               body: message,
+              game: {
+                likes: [],
+                dislikes: [],
+              },
               msgtype: "m.image",
               url: response.content_uri,
             };
@@ -89,6 +96,16 @@ export default {
                 console.log(err);
               }
             );
+
+            // gamification event
+            updateUserGamificationData(
+              userId,
+              this.roomId,
+              undefined,
+              "increment-posts-count"
+            );
+
+            // reset input fields
             document.getElementById("create-post-title-input").value = "";
             document.getElementById("create-post-message-input").value = "";
             document.getElementById("create-post-image-input").value = "";

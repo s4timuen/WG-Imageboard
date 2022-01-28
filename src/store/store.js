@@ -1,11 +1,12 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import * as matrix from "matrix-js-sdk";
+import { baseUrlMatrix, matrixPort } from "@/utils/config.js";
 
 Vue.use(Vuex);
 
 let options = {
-    baseUrl: "http://192.168.0.233:8008",
+    baseUrl: baseUrlMatrix + matrixPort,
     timelineSupport: true
 };
 

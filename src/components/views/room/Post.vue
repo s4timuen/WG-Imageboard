@@ -34,6 +34,10 @@
     </div>
     <!-- post options -->
     <div class="row">
+      <!-- like post -->
+      <span class="clickable" @click="like()">{{ $t("like") }} </span>
+      <!-- dislike post -->
+      <span class="clickable" @click="dislike()">{{ $t("dislike") }} </span>
       <!-- reply to post -->
       <span
         class="clickable"
@@ -54,6 +58,8 @@
       <span class="clickable" @click="deletePost()"
         >{{ $t("show-delete-post") }}
       </span>
+      <!-- likes sum -->
+      <span>{{ $t("likes" + ": ") + likesSum }}</span>
       <!-- create reply input -->
       <CreateReply
         :createReplyId="'CR<' + postData['initial-message'].getId()"
@@ -76,6 +82,7 @@ import Reply from "@/components/views/room/Reply.vue";
 import CreateReply from "@/components/views/room/CreateReply.vue";
 import UpdateMessage from "@/components/views/room/UpdateMessage.vue";
 import { changeElementVisibility } from "@/utils/utils.js";
+import { updateUserGamificationData } from "@/utils/gamification.js";
 
 export default {
   name: "Post",
@@ -87,6 +94,15 @@ export default {
   props: {
     postData: Object,
     roomId: String,
+  },
+  computed: {
+    likesSum() {
+      let likes =
+        this.postData["initial-message"].getContent().game.likes.length;
+      let dislikes =
+        this.postData["initial-message"].getContent().game.dislikes.length;
+      return likes - dislikes;
+    },
   },
   methods: {
     changeElementVisibility,
@@ -118,6 +134,14 @@ export default {
       if (userId !== postSenderId) {
         alert(this.$t("alert-unauthorized-deletion-post"));
       }
+
+      // gamification event
+      updateUserGamificationData(
+        userId,
+        this.roomId,
+        undefined,
+        "reduce-posts-count"
+      );
     },
     getEventIds(postData) {
       let ids = [];
@@ -128,6 +152,28 @@ export default {
         ids.push(reply["reply-message"].getId());
       });
       return ids;
+    },
+    like() {
+      let matrixClient = this.$store.getters.matrixClient;
+      let userId = matrixClient.getUserId();
+      let eventId = this.postData["initial-message"].getId();
+      updateUserGamificationData(
+        userId,
+        this.roomId,
+        eventId,
+        "increment-likes-count"
+      );
+    },
+    dislike() {
+      let matrixClient = this.$store.getters.matrixClient;
+      let userId = matrixClient.getUserId();
+      let eventId = this.postData["initial-message"].getId();
+      updateUserGamificationData(
+        userId,
+        this.roomId,
+        eventId,
+        "reduce-likes-count"
+      );
     },
   },
 };

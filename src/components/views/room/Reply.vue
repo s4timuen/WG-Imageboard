@@ -14,6 +14,10 @@
     </div>
     <!-- reply options -->
     <div class="row">
+      <!-- like reply -->
+      <span class="clickable" @click="like()">{{ $t("like") }} </span>
+      <!-- dislike reply -->
+      <span class="clickable" @click="dislike()">{{ $t("dislike") }} </span>
       <!-- edit reply -->
       <span
         class="clickable"
@@ -24,6 +28,8 @@
       <span class="clickable" @click="deleteReply()"
         >{{ $t("show-delete-post") }}
       </span>
+      <!-- likes sum -->
+      <span>{{ $t("likes" + ": ") + likesSum }}</span>
       <!-- edit reply input -->
       <UpdateMessage
         :updateMessageId="'UM<' + reply['reply-message'].getId()"
@@ -38,11 +44,21 @@
 <script>
 import UpdateMessage from "@/components/views/room/UpdateMessage.vue";
 import { changeElementVisibility } from "@/utils/utils.js";
+import { updateUserGamificationData } from "@/utils/gamification.js";
 
 export default {
   name: "Reply",
   components: { UpdateMessage },
   props: { reply: Object, roomId: String },
+  computed: {
+    likesSum() {
+      let likes =
+        this.postData["initial-message"].getContent().game.likes.length;
+      let dislikes =
+        this.postData["initial-message"].getContent().game.dislikes.length;
+      return likes - dislikes;
+    },
+  },
   methods: {
     changeElementVisibility,
     deleteReply() {
@@ -66,6 +82,36 @@ export default {
       if (userId !== replySenderId) {
         alert(this.$t("alert-unauthorized-deletion-reply"));
       }
+
+      // gamification event
+      updateUserGamificationData(
+        userId,
+        this.roomId,
+        undefined,
+        "reduce-replies-count"
+      );
+    },
+    like() {
+      let matrixClient = this.$store.getters.matrixClient;
+      let userId = matrixClient.getUserId();
+      let eventId = this.reply["reply-message"].getId();
+      updateUserGamificationData(
+        userId,
+        this.roomId,
+        eventId,
+        "increment-likes-count"
+      );
+    },
+    dislike() {
+      let matrixClient = this.$store.getters.matrixClient;
+      let userId = matrixClient.getUserId();
+      let eventId = this.reply["reply-message"].getId();
+      updateUserGamificationData(
+        userId,
+        this.roomId,
+        eventId,
+        "reduce-likes-count"
+      );
     },
   },
 };
