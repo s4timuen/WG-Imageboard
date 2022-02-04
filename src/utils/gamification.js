@@ -10,8 +10,8 @@
  * PUT only 'displayname' and 'avatar_url':
  * https://spec.matrix.org/v1.1/client-server-api/#profiles 
  */
-import { getFileServerData, setFileServerData } from "@/api/fileServer.js";
-import { urlFileServer, portFileServer, fileServerPath } from "@/utils/config.js";
+import { downloadGameData, uploadGameData } from "@/api/gameDatabase.js";
+import { urlDatabase, portDatabase} from "@/utils/config.js";
 
 // gamification events
 const gameEvents = Object.freeze({
@@ -38,7 +38,7 @@ const gamificationInfo = Object.freeze({
 let defaultGameData = {
     "user_id": "",
     "rooms": {},
-    "rank": "newbie",
+    "rank": "new user",
     "badges": []
 }
 
@@ -56,8 +56,8 @@ let defaultRoomData = [
 async function getUserGamificationData(userId) {
     let fileName = await userId.replaceAll(":", '_');
     fileName = fileName.replaceAll('.', '_');
-    let url = urlFileServer + portFileServer + fileServerPath;
-    let gameData = await getFileServerData(url, fileName);
+    let url = urlDatabase + portDatabase;
+    let gameData = await downloadGameData(url, fileName);
     return gameData;
 }
 
@@ -66,8 +66,8 @@ async function updateUserGamificationData(userId, roomId, eventId, gameEvent) {
     let fileName = await userId.replaceAll(":", '_');
     fileName = fileName.replaceAll('.', '_');
 
-    let url = urlFileServer + portFileServer + fileServerPath;
-    let gameData = await getFileServerData(url, fileName);
+    let url = urlDatabase + portDatabase;
+    let gameData = await downloadGameData(url, fileName);
 
 
     // update game data
@@ -97,15 +97,16 @@ async function updateUserGamificationData(userId, roomId, eventId, gameEvent) {
         default:
             throw gamificationErrors[0];
     }
-    setFileServerData(url, gameData);
+    uploadGameData(url, gameData);
 }
 
 async function checkUserGamificationData(userId, roomId, roomVisibility) {
     let fileName = await userId.replaceAll(":", '_');
     fileName = fileName.replaceAll('.', '_');
-    let url = urlFileServer + portFileServer + fileServerPath;
+    let urlDownload = urlDatabase + portDatabase;
+    let urlUpload = urlDatabase + portDatabase;
     let gameData = null;
-    gameData = await getFileServerData(url, fileName);
+    gameData = await downloadGameData(urlDownload, fileName);
 
     // existing user, gamification data available
     if (gameData !== null) {
@@ -127,7 +128,7 @@ async function checkUserGamificationData(userId, roomId, roomVisibility) {
             newDefaultRoomData[0] = roomGameData[0];
             newDefaultRoomData[1].room_visibility = roomGameData[1].roomVisibility;
             gameData.rooms[defaultRoomData[0]] = defaultRoomData[1]
-            setFileServerData(url, fileName, gameData);
+            uploadGameData(urlUpload, fileName, gameData);
         }
     }
     // new user, no gamification data yet
@@ -138,7 +139,7 @@ async function checkUserGamificationData(userId, roomId, roomVisibility) {
         newDefaultRoomData[1].room_visibility = roomVisibility;
         newDefaultGameData.user_id = userId;
         newDefaultGameData.rooms[newDefaultRoomData[0]] = newDefaultRoomData[1];
-        setFileServerData(url, fileName, newDefaultGameData);
+        uploadGameData(urlUpload, fileName, newDefaultGameData);
     }
 }
 

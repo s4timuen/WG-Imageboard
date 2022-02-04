@@ -18,7 +18,7 @@
         {{ $t("profile-game-total-likes") + totalLikes }}
       </div>
       <div class="col-12 data-field">
-        {{ $t("profile-game-total-posts") + totalPost }}
+        {{ $t("profile-game-total-posts") + totalPosts }}
       </div>
       <div class="col-12 data-field">
         {{ $t("profile-game-total-replies") + totalReplies }}
@@ -39,29 +39,41 @@ export default {
   name: "ProfilePage",
   data: function () {
     return {
-      userData: {},
-      userGameData: {},
+      userData: {
+        displayName: "",
+        userId: "",
+      },
+      userGameData: {
+        rank: "new user",
+        badges: [],
+      },
     };
   },
   computed: {
     totalLikes() {
       let counter = 0;
-      for (const value of Object.values(this.userGameData.rooms)) {
-        counter += value.likes_count;
+      if (this.userGameData === null) {
+        for (const value of Object.values(this.userGameData.rooms)) {
+          counter += value.likes_count;
+        }
       }
       return counter;
     },
     totalPosts() {
       let counter = 0;
-      for (const value of Object.values(this.userGameData.rooms)) {
-        counter += value.posts_counter;
+      if (this.userGameData === null) {
+        for (const value of Object.values(this.userGameData.rooms)) {
+          counter += value.posts_counter;
+        }
       }
       return counter;
     },
     totalReplies() {
       let counter = 0;
-      for (const value of Object.values(this.userGameData.rooms)) {
-        counter += value.replies_counter;
+      if (this.userGameData === null) {
+        for (const value of Object.values(this.userGameData.rooms)) {
+          counter += value.replies_counter;
+        }
       }
       return counter;
     },
@@ -76,8 +88,9 @@ export default {
     // if logged and session valid
     let userId = matrixClient.getUserId();
     this.userData = matrixClient.getUser(userId);
-
     this.userGameData = await getUserGamificationData(userId);
+    console.log(this.userData)
+    console.log(this.userGameData)
   },
 };
 </script>

@@ -1,7 +1,6 @@
 const baseUrlMatrix = "http://192.168.0.233";
 const matrixPort = ":8008";
-const urlFileServer = "http://192.168.0.233";
-const portFileServer = ":8095";
-const fileServerPath = "/";
+const urlDatabase = "http://192.168.0.233";
+const portDatabase = ":8080";
 
-export { baseUrlMatrix, matrixPort, urlFileServer, portFileServer, fileServerPath }
+export { baseUrlMatrix, matrixPort, urlDatabase, portDatabase}
