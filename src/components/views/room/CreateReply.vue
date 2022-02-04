@@ -48,10 +48,10 @@ export default {
           "m.in_reply_to": {
             event_id: eventId,
           },
-          game: {
-            likes: [],
-            dislikes: [],
-          },
+        },
+        game: {
+          likes: [],
+          dislikes: [],
         },
         msgtype: "m.text",
       };

@@ -11,7 +11,7 @@
  * https://spec.matrix.org/v1.1/client-server-api/#profiles 
  */
 import { downloadGameData, uploadGameData } from "@/api/gameDatabase.js";
-import { urlDatabase, portDatabase} from "@/utils/config.js";
+import { urlDatabase, portDatabase } from "@/utils/config.js";
 
 // gamification events
 const gameEvents = Object.freeze({
@@ -75,25 +75,31 @@ async function updateUserGamificationData(userId, roomId, eventId, gameEvent) {
         case gameEvents[0]:
             // TODO: event function
             gameData.rooms[roomId].likes_count += 1;
-            // change data strukture to rooms: [id: {} ]
+            // how to update event.game.likes[]? & check user is already in like or in dislike 
+            uploadGameData(url, fileName, gameData);
             break;
         case gameEvents[1]:
             // TODO: event function
+            gameData.rooms[roomId].likes_count -= 1;
+            // how to update event.game.likes[]? & check user is already in dislike or in like 
+            uploadGameData(url, fileName, gameData);
             break;
         case gameEvents[2]:
-            // TODO: event function
+            gameData.rooms[roomId].posts_count += 1;
+            uploadGameData(url, fileName, gameData);
             break;
         case gameEvents[3]:
-            // TODO: event function
+            gameData.rooms[roomId].posts_count -= 1;
+            uploadGameData(url, fileName, gameData);
             break;
         case gameEvents[4]:
-            // TODO: event function
+            gameData.rooms[roomId].replies_count += 1;
+            uploadGameData(url, fileName, gameData);
             break;
         case gameEvents[5]:
-            // TODO: event function
+            gameData.rooms[roomId].replies_count -= 1;
+            uploadGameData(url, fileName, gameData);
             break;
-        // likes -> user count + and event count + (message count)
-        // likes -> how to only like or dislike and only one per user? game:{likes:[userIds], dislikes:[userIds]}
         default:
             throw gamificationErrors[0];
     }
