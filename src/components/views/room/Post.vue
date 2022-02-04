@@ -8,7 +8,13 @@
       </h5>
       <!-- post meta data -->
       <div class="post-meta-info col-12">
-        <span>{{ postData["initial-message"].getSender() }}</span>
+        <span>{{ postData["initial-message"].getSender() + ", " }}</span>
+        <span>{{ $t("profile-game-rank") + userGameData.rank + ", " }}</span>
+        <span>{{
+          $t("profile-game-total-likes") +
+          userGameData.rooms[roomId].likes_count +
+          ", "
+        }}</span>
         <span>{{ postData["initial-message"].getDate() }}</span>
       </div>
       <!--post image -->
@@ -82,7 +88,10 @@ import Reply from "@/components/views/room/Reply.vue";
 import CreateReply from "@/components/views/room/CreateReply.vue";
 import UpdateMessage from "@/components/views/room/UpdateMessage.vue";
 import { changeElementVisibility } from "@/utils/utils.js";
-import { updateUserGamificationData } from "@/utils/gamification.js";
+import {
+  updateUserGamificationData,
+  getUserGamificationData,
+} from "@/utils/gamification.js";
 
 export default {
   name: "Post",
@@ -94,6 +103,18 @@ export default {
   props: {
     postData: Object,
     roomId: String,
+  },
+  data: function () {
+    return {
+      userGameData: {
+        rooms: {
+          [this.roomId]: {
+            likes_count: 0,
+          },
+        },
+        rank: "new user",
+      },
+    };
   },
   computed: {
     likesSum() {
@@ -175,6 +196,17 @@ export default {
         "reduce-likes-count"
       );
     },
+  },
+  mounted: async function () {
+    let matrixClient = this.$store.getters.matrixClient;
+
+    // if logged and session valid
+    let userId = matrixClient.getUserId();
+    this.userData = matrixClient.getUser(userId);
+    let gameData = await getUserGamificationData(userId);
+    if (gameData) {
+      this.userGameData = gameData;
+    }
   },
 };
 </script>

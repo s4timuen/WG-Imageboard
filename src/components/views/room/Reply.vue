@@ -4,8 +4,14 @@
     <div class="row">
       <!-- reply meta data -->
       <div class="reply-meta-info col-12">
-        <span>{{ reply["reply-message"].getSender() }}</span>
-        <span>{{ reply["reply-message"].getDate() }}</span>
+        <span>{{ reply["reply-message"].getSender() + ", " }}</span>
+        <span>{{ reply["reply-message"].getDate() + ", " }}</span>
+        <span>{{ $t("profile-game-rank") + userGameData.rank + ", " }}</span>
+        <span>{{
+          $t("profile-game-total-likes") +
+          userGameData.rooms[roomId].likes_count +
+          ", "
+        }}</span>
       </div>
       <!-- reply message -->
       <div :id="reply['reply-message'].getId()" class="col-12">
@@ -44,18 +50,35 @@
 <script>
 import UpdateMessage from "@/components/views/room/UpdateMessage.vue";
 import { changeElementVisibility } from "@/utils/utils.js";
-import { updateUserGamificationData } from "@/utils/gamification.js";
+import {
+  updateUserGamificationData,
+  getUserGamificationData,
+} from "@/utils/gamification.js";
 
 export default {
   name: "Reply",
   components: { UpdateMessage },
-  props: { reply: Object, roomId: String },
+  props: {
+    reply: Object,
+    roomId: String,
+  },
+  data: function () {
+    return {
+      userGameData: {
+        rooms: {
+          [this.roomId]: {
+            likes_count: 0,
+          },
+        },
+        rank: "new user",
+      },
+    };
+  },
   computed: {
     likesSum() {
-      let likes =
-        this.postData["initial-message"].getContent().game.likes.length;
+      let likes = this.reply["reply-message"].getContent().game.likes.length;
       let dislikes =
-        this.postData["initial-message"].getContent().game.dislikes.length;
+        this.reply["reply-message"].getContent().game.dislikes.length;
       return likes - dislikes;
     },
   },
@@ -113,6 +136,17 @@ export default {
         "reduce-likes-count"
       );
     },
+  },
+  mounted: async function () {
+    let matrixClient = this.$store.getters.matrixClient;
+
+    // if logged and session valid
+    let userId = matrixClient.getUserId();
+    this.userData = matrixClient.getUser(userId);
+    let gameData = await getUserGamificationData(userId);
+    if (gameData) {
+      this.userGameData = gameData;
+    }
   },
 };
 </script>
