@@ -24,8 +24,17 @@
         {{ $t("profile-game-total-replies") + totalReplies }}
       </div>
       <div class="col-12 data-field">
-        {{ $t("profile-game-badges") + userGameData.badges }}
+        {{ $t("profile-game-badges") }}
         <!-- display badges here after badges implementation -->
+        <div
+          class="col-12 data-field"
+          v-for="(badge, key) in userGameData.badges"
+          :key="key"
+        >
+          <div>
+            {{ badge.name + ": " + badge.rank + ", " + badge.obtained }}
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -44,6 +53,7 @@ export default {
         userId: "",
       },
       userGameData: {
+        rooms: {},
         rank: "new user",
         badges: [],
       },
@@ -52,8 +62,10 @@ export default {
   computed: {
     totalLikes() {
       let counter = 0;
-      if (this.userGameData === null) {
+      console.log(this.userGameData);
+      if (this.userGameData !== null) {
         for (const value of Object.values(this.userGameData.rooms)) {
+          console.log(value);
           counter += value.likes_count;
         }
       }
@@ -61,36 +73,34 @@ export default {
     },
     totalPosts() {
       let counter = 0;
-      if (this.userGameData === null) {
+      if (this.userGameData !== null) {
         for (const value of Object.values(this.userGameData.rooms)) {
-          counter += value.posts_counter;
+          counter += value.posts_count;
         }
       }
       return counter;
     },
     totalReplies() {
       let counter = 0;
-      if (this.userGameData === null) {
+      if (this.userGameData !== null) {
         for (const value of Object.values(this.userGameData.rooms)) {
-          counter += value.replies_counter;
+          counter += value.replies_count;
         }
       }
       return counter;
     },
   },
   mounted: async function () {
-    let matrixClient = this.$store.getters.matrixClient;
-    let accessToken = this.$cookie.get("matrix-user-token");
-
     // check valid login and session
+    let accessToken = this.$cookie.get("matrix-user-token");
     await checkSession(this, accessToken);
-
-    // if logged and session valid
+  },
+  created: async function () {
+    // get user gamification data
+    let matrixClient = this.$store.getters.matrixClient;
     let userId = matrixClient.getUserId();
     this.userData = matrixClient.getUser(userId);
     this.userGameData = await getUserGamificationData(userId);
-    console.log(this.userData)
-    console.log(this.userGameData)
   },
 };
 </script>
