@@ -6,19 +6,6 @@
     <div class="row">
       <h1 class="col-12 align-content-center">{{ $t("registration") }}</h1>
     </div>
-    <!-- input user email -->
-    <div class="row">
-      <label class="col-8 offset-2 d-flex justify-content-start">{{
-        $t("email")
-      }}</label>
-      <input
-        id="user-registration-email-input"
-        type="text"
-        class="col-8 offset-2 d-flex justify-content-start"
-        :placeholder="$t('placeholder-enter-email')"
-        required="true"
-      />
-    </div>
     <!-- input user name -->
     <div class="row">
       <label class="col-8 offset-2 d-flex justify-content-start">{{
@@ -67,6 +54,14 @@
       >
         {{ $t("registration") }}
       </button>
+      <!-- registration confiramtion text -->
+      <div
+        id="registration-confirmation-text"
+        class="col-12 text-success"
+        hidden
+      >
+        {{ $t("registration-confirmation-text") }}
+      </div>
     </div>
   </div>
 </template>
@@ -95,7 +90,23 @@ export default {
         this.userPasswordRegistration == this.userPasswordConfirmRegistration
       ) {
         matrixClient
-          .register(this.userNameRegistration, this.userPasswordRegistration)
+          .register(
+            this.userNameRegistration,
+            this.userPasswordRegistration,
+            "",
+            { type: "m.login.dummy" }
+          )
+          .then(async () => {
+            document.getElementById("user-registration-name-input").value = "";
+            document.getElementById("user-registration-password-input").value =
+              "";
+            document.getElementById(
+              "user-registration-password-confirm-input"
+            ).value = "";
+            document.getElementById(
+              "registration-confirmation-text"
+            ).hidden = false;
+          })
           .catch((error) => {
             throw error;
           });
