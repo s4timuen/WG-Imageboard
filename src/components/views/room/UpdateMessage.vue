@@ -47,6 +47,7 @@ export default {
       let userId = matrixClient.getUserId();
       let senderId = this.messageContent.getSender();
 
+      // build event content
       if (userId === senderId) {
         let content = {
           body: message,
@@ -58,6 +59,7 @@ export default {
           msgtype: "m.text",
         };
 
+        // send event
         if (message) {
           matrixClient.sendEvent(
             this.roomId,
@@ -70,6 +72,7 @@ export default {
           );
         }
       }
+      // alert if unauthorized user
       if (userId !== senderId) {
         alert(this.$t("alert-unauthorized-post-or-reply-edit"));
       }

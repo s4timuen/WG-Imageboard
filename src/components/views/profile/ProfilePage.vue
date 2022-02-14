@@ -60,6 +60,7 @@ export default {
     };
   },
   computed: {
+    // computed value of likes minus dislikes
     totalLikes() {
       let counter = 0;
       if (this.userGameData !== null) {
@@ -69,6 +70,7 @@ export default {
       }
       return counter;
     },
+    // computed value of posts sum
     totalPosts() {
       let counter = 0;
       if (this.userGameData !== null) {
@@ -78,6 +80,7 @@ export default {
       }
       return counter;
     },
+    // computed value of replies sum
     totalReplies() {
       let counter = 0;
       if (this.userGameData !== null) {

@@ -75,6 +75,7 @@ export default {
     };
   },
   computed: {
+    // computed value of likes minus dislikes
     likesSum() {
       let likes = this.reply["reply-message"].getContent().game.likes.length;
       let dislikes =
@@ -102,6 +103,7 @@ export default {
           });
         }
       }
+      // alert if unauthorized user
       if (userId !== replySenderId) {
         alert(this.$t("alert-unauthorized-deletion-reply"));
       }

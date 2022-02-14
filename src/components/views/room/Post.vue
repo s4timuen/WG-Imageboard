@@ -117,6 +117,7 @@ export default {
     };
   },
   computed: {
+    // computed value of likes minus dislikes
     likesSum() {
       let likes =
         this.postData["initial-message"].getContent().game.likes.length;
@@ -127,6 +128,7 @@ export default {
   },
   methods: {
     changeElementVisibility,
+    // mxc (matrix content) URI to Http URL
     getHttpUrl(mxcUrl) {
       let matrixClient = this.$store.getters.matrixClient;
       return matrixClient.mxcUrlToHttp(mxcUrl, 50, 50, "scale", false);
@@ -152,6 +154,7 @@ export default {
           }
         }
       }
+      // alert if unauthorized user
       if (userId !== postSenderId) {
         alert(this.$t("alert-unauthorized-deletion-post"));
       }

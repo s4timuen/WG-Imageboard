@@ -42,6 +42,7 @@ export default {
       let message = document.getElementById(textAreaId).value;
       let eventId = this.createReplyId.substring(3);
 
+      // build event content
       let content = {
         body: message,
         "m.relates_to": {
@@ -56,6 +57,7 @@ export default {
         msgtype: "m.text",
       };
 
+      // send event
       if (message) {
         matrixClient.sendEvent(
           this.roomId,

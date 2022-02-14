@@ -10,12 +10,7 @@
         <input
           id="invite-user-id-input"
           type="text"
-          class="
-            col-8
-            offset-2
-            d-flex
-            justify-content-start
-          "
+          class="col-8 offset-2 d-flex justify-content-start"
           :placeholder="$t('placeholder-enter-user-id')"
           required
         />
@@ -73,6 +68,7 @@ export default {
         "invite-user-reason-input"
       ).value;
 
+      // invite user
       matrixClient
         .invite(
           this.roomId,
@@ -82,6 +78,7 @@ export default {
           },
           inviteReason
         )
+        // clear input fields after successful invite
         .then(() => {
           document.getElementById("invite-user-id-input").value = "";
           document.getElementById("invite-user-reason-input").value = "";

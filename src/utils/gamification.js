@@ -124,7 +124,6 @@ function updateEventGameData(userId, eventId, roomId, context, gameEvent) {
     // like
     if (gameEvent === gameEvents[0]) {
         // in dislike -> change to likes
-        console.log(content)
         if (content.game.dislikes.includes(userId)) {
             let newDislikes = content.game.dislikes.filter(function (element) {
                 return element !== userId;

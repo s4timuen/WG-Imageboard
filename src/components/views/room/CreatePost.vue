@@ -70,11 +70,13 @@ export default {
       // upload image (to homeserver) and send message event (to room)
       if (Boolean(title) && Boolean(message) && Boolean(this.selectedImage)) {
         await matrixClient
+          // upload image
           .uploadContent(this.selectedImage, {
             name: this.selectedImage.name,
             type: this.selectedImage.type,
             onlyContentUri: false,
           })
+          // build event content, retrive MXC (matrix content URI) from image upload response
           .then((response) => {
             let content = {
               header: title,
@@ -86,7 +88,7 @@ export default {
               msgtype: "m.image",
               url: response.content_uri,
             };
-
+            // send event
             matrixClient.sendEvent(
               this.roomId,
               "m.room.message",

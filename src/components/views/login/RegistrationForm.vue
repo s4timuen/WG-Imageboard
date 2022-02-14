@@ -97,6 +97,7 @@ export default {
             { type: "m.login.dummy" }
           )
           .then(async () => {
+            // clear input fields after successful registration and display respective message
             document.getElementById("user-registration-name-input").value = "";
             document.getElementById("user-registration-password-input").value =
               "";
