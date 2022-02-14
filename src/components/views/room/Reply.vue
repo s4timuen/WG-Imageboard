@@ -111,6 +111,7 @@ export default {
         userId,
         this.roomId,
         undefined,
+        undefined,
         "reduce-replies-count"
       );
     },
@@ -122,6 +123,7 @@ export default {
         userId,
         this.roomId,
         eventId,
+        this,
         "increment-likes-count"
       );
     },
@@ -133,6 +135,7 @@ export default {
         userId,
         this.roomId,
         eventId,
+        this,
         "reduce-likes-count"
       );
     },

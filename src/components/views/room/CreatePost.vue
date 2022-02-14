@@ -102,6 +102,7 @@ export default {
               userId,
               this.roomId,
               undefined,
+              undefined,
               "increment-posts-count"
             );
 

@@ -62,7 +62,7 @@ async function getUserGamificationData(userId) {
 }
 
 // set gamification data for respective user
-async function updateUserGamificationData(userId, roomId, eventId, gameEvent) {
+async function updateUserGamificationData(userId, roomId, eventId, context, gameEvent) {
     let fileName = await userId.replaceAll(":", '_');
     fileName = fileName.replaceAll('.', '_');
 
@@ -73,16 +73,14 @@ async function updateUserGamificationData(userId, roomId, eventId, gameEvent) {
     // update game data
     switch (gameEvent) {
         case gameEvents[0]:
-            // TODO: event function
             gameData.rooms[roomId].likes_count += 1;
-            // how to update event.game.likes[]? & check user is already in like or in dislike 
             uploadGameData(url, fileName, gameData);
+            updateEventGameData(userId, eventId, roomId, context, gameEvent);
             break;
         case gameEvents[1]:
-            // TODO: event function
             gameData.rooms[roomId].likes_count -= 1;
-            // how to update event.game.likes[]? & check user is already in dislike or in like 
             uploadGameData(url, fileName, gameData);
+            updateEventGameData(userId, eventId, roomId, context, gameEvent);
             break;
         case gameEvents[2]:
             gameData.rooms[roomId].posts_count += 1;
@@ -104,6 +102,67 @@ async function updateUserGamificationData(userId, roomId, eventId, gameEvent) {
             throw gamificationErrors[0];
     }
     uploadGameData(url, gameData);
+}
+
+function updateEventGameData(userId, eventId, roomId, context, gameEvent) {
+    let matrixClient = context.$store.getters.matrixClient;
+    let room = matrixClient.getRoom(roomId);
+    let timeline = room.getTimelineForEvent(eventId);
+    let event = {};
+    timeline.events.forEach((timelineEvent) => {
+        if (timelineEvent.event.event_id === eventId) {
+            event = timelineEvent;
+        }
+    });
+
+    let content = event.getContent();
+    content["m.relates_to"] = {
+        replace: {
+            event_id: eventId,
+        }
+    }
+    // like
+    if (gameEvent === gameEvents[0]) {
+        // in dislike -> change to likes
+        console.log(content)
+        if (content.game.dislikes.includes(userId)) {
+            let newDislikes = content.game.dislikes.filter(function (element) {
+                return element !== userId;
+            })
+            content.game.dislikes = newDislikes;
+            content.game.likes.push(userId);
+        }
+        // in nether -> add to like
+        if (!content.game.dislikes.includes(userId) && !content.game.likes.includes(userId)) {
+            content.game.likes.push(userId);
+        }
+        // already in likes -> do nothing
+    }
+    // dislike
+    if (gameEvent === gameEvents[1]) {
+        // in like -> delete and add to dislike
+        if (content.game.likes.includes(userId)) {
+            let newLikes = content.game.likes.filter(function (element) {
+                return element !== userId;
+            })
+            content.game.likes = newLikes;
+            content.game.dislikes.push(userId);
+        }
+        // in nether -> add to dislike
+        if (!content.game.dislikes.includes(userId) && !content.game.likes.includes(userId)) {
+            content.game.dislikes.push(userId);
+        }
+        // already in dislike -> do nothing
+    }
+    matrixClient.sendEvent(
+        roomId,
+        "m.room.message",
+        content,
+        "",
+        (err) => {
+            console.log(err);
+        }
+    );  
 }
 
 async function checkUserGamificationData(userId, roomId, roomVisibility) {
@@ -132,7 +191,7 @@ async function checkUserGamificationData(userId, roomId, roomVisibility) {
         if (roomGameData.length === 0) {
             let newDefaultRoomData = defaultRoomData;
             newDefaultRoomData[0] = roomGameData[0];
-            newDefaultRoomData[1].room_visibility = roomGameData[1].roomVisibility;
+            newDefaultRoomData[1].room_visibility = roomGameData[1].room_visibility;
             gameData.rooms[defaultRoomData[0]] = defaultRoomData[1]
             uploadGameData(urlUpload, fileName, gameData);
         }

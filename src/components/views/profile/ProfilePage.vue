@@ -62,10 +62,8 @@ export default {
   computed: {
     totalLikes() {
       let counter = 0;
-      console.log(this.userGameData);
       if (this.userGameData !== null) {
         for (const value of Object.values(this.userGameData.rooms)) {
-          console.log(value);
           counter += value.likes_count;
         }
       }

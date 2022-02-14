@@ -18,7 +18,7 @@ async function downloadGameData(url, fileName) {
     return {
         "user_id": "@tim:my.matrix.host",
         "rooms": {
-            "!JfkzmnQLZJNpsyZpkd:my.matrix.host": {
+            "!jsGOZoogkexwXmNhpa:my.matrix.host": {
                 "room_visibility": "private",
                 "posts_count": 2,
                 "replies_count": 3,

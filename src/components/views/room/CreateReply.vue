@@ -73,6 +73,7 @@ export default {
         userId,
         this.roomId,
         undefined,
+        undefined,
         "increment-replies-count"
       );
 
